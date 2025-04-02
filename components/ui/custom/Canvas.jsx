@@ -23,11 +23,11 @@ export default function Canvas() {
   const onDragLeaveHandle = () => {
     setDragOver(false)
   }
-  console.log('Drag Over State:', dragOver); // Add this log to see state changes
+  // console.log('Drag Over State:', dragOver); // Removed debug log
   return (
     <div className='mt-20 flex justify-center'>
-      <div className={`bg-white p-6 w-full ${screenSize == 'desktop' ? 'max-w-2xl' : 'max-w-md'} 
-      ${dragOver && 'bg-purple-100 p-4'} `} // Removed extra space before p-4
+      <div className={`bg-white p-6 w-full min-h-[200px] ${screenSize == 'desktop' ? 'max-w-2xl' : 'max-w-md'} 
+      ${dragOver && 'bg-purple-100 p-4'} `} // Added min-h-[200px]
 
         onDragOver={onDragOver}
         onDrop={() => onDropHandle()}
