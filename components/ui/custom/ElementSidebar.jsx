@@ -1,8 +1,17 @@
+"use client"
 import React from "react";
 import Layout from "@/Data/Layout";
 import ElementList from "@/Data/ElementList";
 import ElementLayoutCard from "@/components/ui/custom/ElementLayoutCard";
+import { useDragElementLayout } from "@/app/provider";
 export default function ElementSidebar() {
+  const { dragElementLayout, setDragElementLayout } = useDragElementLayout()
+  const onDragLayoutStart = (layout) => {
+    setDragElementLayout({
+      ...layout,
+      id: Date.now()
+    })
+  }
   return (
     <div className="p-4">
       <h2 className="font-bold text-lg">Layouts</h2>
@@ -10,7 +19,9 @@ export default function ElementSidebar() {
 
         {Layout.map((layout, index) => (
 
-          <ElementLayoutCard layout={layout} key={index} />
+          <div key={index} draggable onDragStart={() => onDragLayoutStart(layout)}>
+            <ElementLayoutCard layout={layout} />
+          </div>
         ))}
       </div>
       <h2 className="font-bold text-lg">Elements</h2>

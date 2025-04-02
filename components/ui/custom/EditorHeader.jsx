@@ -1,16 +1,20 @@
+"use client"
 import React from 'react'
 import Image from 'next/image'
 import { Button } from '../button'
 import { Code, Monitor, Smartphone } from 'lucide-react'
+import { useScreenSize } from '@/app/provider'
 function EditorHeader() {
+  const { screenSize, setScreenSize } = useScreenSize()
   return (
     <div className='flex shadow-sm justify-between items-center'>
       <Image src="/logo.png" alt='logo' width={50} height={80}></Image>
 
-      <div>
-        <Button variant="ghost"><Monitor />Desktop</Button>
-        <Button variant="ghost"><Smartphone />Mobile</Button>
-      </div>
+      <div className="flex gap-3">
+        <Button variant="ghost" onClick={() => setScreenSize('desktop')} className={`${screenSize == 'desktop' && 'bg-purple-100 text-primary'}`}><Monitor />Desktop</Button>
+        <Button variant="ghost" onClick={() => setScreenSize('mobile')} className={`${screenSize == 'mobile' && 'bg-purple-100 text-primary'}`}><Smartphone />Mobile</Button>
+
+      </div >
       <div className="flex gap-3 "><Button>save template</Button>
         <Button variant={'outline'}>send test email </Button>
 
