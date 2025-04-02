@@ -73,7 +73,7 @@ async function validateRequest(req) {
     const event = wh.verify(payloadString, svixHeaders);
     // Assuming verify returns the event object on success
     // and throws on failure based on svix library behavior.
-    return event as unknown; // Cast or validate the type if necessary
+    return event; // Return the verified event object directly
   } catch (error) {
     // Log the specific verification error
     console.error("Error verifying webhook signature:", error);
