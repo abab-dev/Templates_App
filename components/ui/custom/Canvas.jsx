@@ -2,52 +2,57 @@
 import { useState } from 'react'
 import { useDragElementLayout, useEmailTemplate, useScreenSize } from '@/app/provider'
 import ColumnLayout from './LayoutElements/ColumnLayout'
-import { getLayoutOrPageModule } from 'next/dist/server/lib/app-dir-module'
-export default function Canvas() {
 
-  const { screenSize, setScreenSize } = useScreenSize()
+export default function Canvas() {
+  const { screenSize } = useScreenSize()
   const { dragElementLayout, setDragElementLayout } = useDragElementLayout()
   const { emailTemplate, setEmailTemplate } = useEmailTemplate()
   const [dragOver, setDragOver] = useState(false)
+
   const onDragOver = (e) => {
     e.preventDefault()
     setDragOver(true)
-    console.log("over jj   ")
   }
+
+  const onDragLeave = () => {
+    setDragOver(false)
+  }
+
   const onDropHandle = () => {
     setDragOver(false)
     if (dragElementLayout) {
-      console.log(dragElementLayout?.dragLayout) // Log the whole object being dropped
-      setEmailTemplate(prev => [...prev, dragElementLayout?.dragLayout]) // Use the correct object
+      console.log(dragElementLayout?.dragLayout) // Log the dropped object
+      setEmailTemplate(prev => [...prev, dragElementLayout?.dragLayout])
     }
   }
-  const getLayoutComponet = (layout) => {
-    if (layout?.type == 'column') {
-      return <ColumnLayout layout={layout}></ColumnLayout>
+
+  const getLayoutComponent = (layout) => {
+    if (layout?.type === 'column') {
+      return <ColumnLayout layout={layout} />
     }
   }
+
   return (
-    <div className='mt-20 flex justify-center'>
-      <div className={`bg-white p-6 w-full 
-      ${screenSize == 'desktop' ? 'max-w-2xl' : 'max-w-md'} 
-      ${dragOver && 'bg-purple-100 p-4'} `} // Added min-h-[200px]
-
+    <div className="mt-20 flex justify-center">
+      <div
+        className={`bg-white p-6 w-full transition-all duration-200 
+          ${screenSize === 'desktop' ? 'max-w-2xl' : 'max-w-md'}
+          ${dragOver ? 'bg-purple-100 p-8' : 'p-6'}`
+        } 
         onDragOver={onDragOver}
-        onDrop={() => onDropHandle()}
+        onDragLeave={onDragLeave} 
+        onDrop={onDropHandle}
       >
-        {emailTemplate?.length ? emailTemplate?.map((layout, index) => (
-          <div key={index}>
-            {/* Column {index + 1} */}
-            {getLayoutComponet(layout)}
-          </div>
-        ))
-          : <p className='p-4 text-center bg-grey-100  border border-dash '>Add Your Layout Here</p>
-        }
-
-
-
+        {emailTemplate?.length ? (
+          emailTemplate.map((layout, index) => (
+            <div key={index}>{getLayoutComponent(layout)}</div>
+          ))
+        ) : (
+          <p className="p-4 text-center bg-gray-100 border border-dashed">
+            Add Your Layout Here
+          </p>
+        )}
       </div>
-    </div  >
+    </div>
   )
 }
-
