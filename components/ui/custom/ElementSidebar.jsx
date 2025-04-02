@@ -8,8 +8,10 @@ export default function ElementSidebar() {
   const { dragElementLayout, setDragElementLayout } = useDragElementLayout()
   const onDragLayoutStart = (layout) => {
     setDragElementLayout({
-      ...layout,
-      id: Date.now()
+      dragLayout: {
+        ...layout,
+        id: Date.now()
+      }
     })
   }
   return (

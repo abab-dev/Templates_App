@@ -1,6 +1,8 @@
 "use client"
 import { useState } from 'react'
 import { useDragElementLayout, useEmailTemplate, useScreenSize } from '@/app/provider'
+import ColumnLayout from './LayoutElements/ColumnLayout'
+import { getLayoutOrPageModule } from 'next/dist/server/lib/app-dir-module'
 export default function Canvas() {
 
   const { screenSize, setScreenSize } = useScreenSize()
@@ -15,24 +17,36 @@ export default function Canvas() {
   const onDropHandle = () => {
     setDragOver(false)
     if (dragElementLayout) {
-      console.log(dragElementLayout) // Log the whole object being dropped
-      setEmailTemplate(prev => [...prev, dragElementLayout]) // Use the correct object
+      console.log(dragElementLayout?.dragLayout) // Log the whole object being dropped
+      setEmailTemplate(prev => [...prev, dragElementLayout?.dragLayout]) // Use the correct object
     }
-    // console.log(dragElementLayout?.dragLayout) // Remove or keep for debugging if needed
   }
-  const onDragLeaveHandle = () => {
-    setDragOver(false)
+  const getLayoutComponet = (layout) => {
+    if (layout?.type == 'column') {
+      return <ColumnLayout layout={layout}></ColumnLayout>
+    }
   }
-  // console.log('Drag Over State:', dragOver); // Removed debug log
   return (
     <div className='mt-20 flex justify-center'>
-      <div className={`bg-white p-6 w-full min-h-[200px] ${screenSize == 'desktop' ? 'max-w-2xl' : 'max-w-md'} 
+      <div className={`bg-white p-6 w-full 
+      ${screenSize == 'desktop' ? 'max-w-2xl' : 'max-w-md'} 
       ${dragOver && 'bg-purple-100 p-4'} `} // Added min-h-[200px]
 
         onDragOver={onDragOver}
         onDrop={() => onDropHandle()}
-        onDragLeave={onDragLeaveHandle}
-      ></div>
+      >
+        {emailTemplate?.length ? emailTemplate?.map((layout, index) => (
+          <div key={index}>
+            {/* Column {index + 1} */}
+            {getLayoutComponet(layout)}
+          </div>
+        ))
+          : <p className='p-4 text-center bg-grey-100  border border-dash '>Add Your Layout Here</p>
+        }
+
+
+
+      </div>
     </div  >
   )
 }

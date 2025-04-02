@@ -12,16 +12,17 @@ function Provider({ children }) {
 
   return (
     <ScreenSizeContext.Provider value={{ screenSize, setScreenSize }}>
-      <EmailTemplateContext.Provider value={{ emailTemplate, setEmailTemplate }}>
-        < DragDropLayoutElement.Provider value={{ dragElementLayout, setDragElementLayout }
-        }>
+      < DragDropLayoutElement.Provider value={{ dragElementLayout, setDragElementLayout }
+      }>
+        <EmailTemplateContext.Provider value={{ emailTemplate, setEmailTemplate }}>
           {children}
-        </DragDropLayoutElement.Provider >
-      </EmailTemplateContext.Provider>
-    </ScreenSizeContext.Provider>
+        </EmailTemplateContext.Provider>
+      </DragDropLayoutElement.Provider >
+    </ScreenSizeContext.Provider >
   )
 }
 export default Provider
+
 export const useDragElementLayout = () => {
   return useContext(DragDropLayoutElement)
 }
