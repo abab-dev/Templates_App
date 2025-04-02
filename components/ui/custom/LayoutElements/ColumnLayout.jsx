@@ -23,7 +23,7 @@ export default function ColumnLayout({ layout }) {
         Array.from({ length: layout?.numOfCol }).map((_,index)=>(
           <div key={index} className={`p-2 flex items-center 
           bg-gray-100 border border-dashed justify-center
-          ${(index==dragOver?.index && dragOver?.columnId) && 'bg-green-100'} `}
+          ${(index === dragOver?.index && layout?.id === dragOver?.columnId) && 'bg-green-100'} `}
           onDragOver={(event)=>onDragOverHandle(event,index)}>
             {index+1}
           </div>
