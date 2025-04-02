@@ -14,11 +14,11 @@ export default function Canvas() {
   }
   const onDropHandle = () => {
     setDragOver(false)
-    // if (dragElementLayout?.dragLayout) {
-    //   console.log(dragElementLayout?.dragLayout)
-    //   setEmailTemplate(prev => [...prev, dragElementLayout?.dragLayout])
-    // }
-    console.log(dragElementLayout?.dragLayout)
+    if (dragElementLayout) {
+      console.log(dragElementLayout) // Log the whole object being dropped
+      setEmailTemplate(prev => [...prev, dragElementLayout]) // Use the correct object
+    }
+    // console.log(dragElementLayout?.dragLayout) // Remove or keep for debugging if needed
   }
   return (
     <div className='mt-20 flex justify-center'>
