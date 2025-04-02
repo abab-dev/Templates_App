@@ -20,6 +20,9 @@ export default function Canvas() {
     }
     // console.log(dragElementLayout?.dragLayout) // Remove or keep for debugging if needed
   }
+  const onDragLeaveHandle = () => {
+    setDragOver(false)
+  }
   return (
     <div className='mt-20 flex justify-center'>
       <div className={`bg-white p-6 w-full ${screenSize == 'desktop' ? 'max-w-2xl' : 'max-w-md'} 
@@ -27,6 +30,7 @@ export default function Canvas() {
 
         onDragOver={onDragOver}
         onDrop={() => onDropHandle()}
+        onDragLeave={onDragLeaveHandle}
       ></div>
     </div  >
   )
