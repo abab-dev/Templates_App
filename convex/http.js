@@ -9,10 +9,30 @@ http.route({
   path: "/clerk-users-webhook",
   method: "POST",
   handler: httpAction(async (ctx, request) => {
-    const event = await validateRequest(request);
-    if (!event) {
-      return new Response("Error occured", { status: 400 });
+    let event;
+    try {
+      event = await validateRequest(request);
+    } catch (err) {
+      // Handle the specific error for missing secret
+      if (err instanceof Error && err.message.includes("Webhook secret not configured")) {
+        return new Response("Internal Server Error: Webhook secret not configured", { status: 500 });
+      }
+      // Handle other potential errors during validation setup if necessary
+      console.error("Unexpected error during webhook validation setup:", err);
+      return new Response("Internal Server Error", { status: 500 });
     }
+
+    if (!event) {
+      // This now specifically means signature verification failed
+      return new Response("Webhook validation failed", { status: 400 });
+    }
+
+    // Ensure event has a 'type' property before switching
+    if (typeof event !== 'object' || event === null || !('type' in event)) {
+        console.error("Received invalid event structure from webhook verification");
+        return new Response("Invalid event structure", { status: 400 });
+    }
+
     switch (event.type) {
       case "user.created": // intentional fallthrough
       case "user.updated":
@@ -41,11 +61,23 @@ async function validateRequest(req) {
     "svix-timestamp": req.headers.get("svix-timestamp"),
     "svix-signature": req.headers.get("svix-signature"),
   };
-  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
+  const secret = process.env.CLERK_WEBHOOK_SECRET;
+  if (!secret) {
+    console.error("CLERK_WEBHOOK_SECRET environment variable not set.");
+    // Throw an error to be caught by the main handler for a 500 response
+    throw new Error("Webhook secret not configured on the server.");
+  }
+  const wh = new Webhook(secret);
   try {
-    return wh.verify(payloadString, svixHeaders);
+    // Ensure the object returned by verify is correctly typed or handled
+    const event = wh.verify(payloadString, svixHeaders);
+    // Assuming verify returns the event object on success
+    // and throws on failure based on svix library behavior.
+    return event as unknown; // Cast or validate the type if necessary
   } catch (error) {
-    console.error("Error verifying webhook event", error);
+    // Log the specific verification error
+    console.error("Error verifying webhook signature:", error);
+    // Indicate validation failure, leading to a 400 response
     return null;
   }
 }
