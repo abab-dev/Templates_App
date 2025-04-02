@@ -11,15 +11,25 @@ export const current = query({
 export const upsertFromClerk = internalMutation({
   args: { data: v.any() }, // no runtime validation, trust Clerk
   async handler(ctx, { data }) {
+    // Extract email and ensure it's a string, handle cases where it might be missing or not primary
+    const primaryEmail = data.email_addresses?.find(
+      (e) => e.id === data.primary_email_address_id,
+    );
+    const email = primaryEmail?.email_address ?? ""; // Default to empty string if no email found
+
     const userAttributes = {
-      name: `${data.first_name} ${data.last_name}`,
-      externalId: data.id,
+      name: `${data.first_name ?? ""} ${data.last_name ?? ""}`.trim(), // Handle potential null names
+      clerkId: data.id,
+      email: email,
+      picture: data.image_url,
     };
 
-    const user = await userByExternalId(ctx, data.id);
+    const user = await userByClerkId(ctx, data.id);
     if (user === null) {
-      await ctx.db.insert("users", userAttributes);
+      // Initialize credits for new users
+      await ctx.db.insert("users", { ...userAttributes, credits: 0 });
     } else {
+      // Only patch attributes, don't overwrite credits unless intended
       await ctx.db.patch(user._id, userAttributes);
     }
   },
@@ -28,9 +38,10 @@ export const upsertFromClerk = internalMutation({
 export const deleteFromClerk = internalMutation({
   args: { clerkUserId: v.string() },
   async handler(ctx, { clerkUserId }) {
-    const user = await userByExternalId(ctx, clerkUserId);
+    const user = await userByClerkId(ctx, clerkUserId);
 
     if (user !== null) {
+      // Consider what should happen to related data when a user is deleted
       await ctx.db.delete(user._id);
     } else {
       console.warn(
@@ -51,12 +62,14 @@ export async function getCurrentUser(ctx) {
   if (identity === null) {
     return null;
   }
-  return await userByExternalId(ctx, identity.subject);
+  // Clerk's user ID is in the 'subject' field of the identity
+  return await userByClerkId(ctx, identity.subject);
 }
 
-async function userByExternalId(ctx, externalId) {
+// Renamed function and updated index/field names
+async function userByClerkId(ctx, clerkId) {
   return await ctx.db
     .query("users")
-    .withIndex("byExternalId", (q) => q.eq("externalId", externalId))
+    .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
     .unique();
 }
