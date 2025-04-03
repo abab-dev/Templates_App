@@ -137,31 +137,33 @@ export default function ColumnLayout({ layout }) {
           gridTemplateColumns: `repeat(${layout?.numOfCol}, 1fr)`,
           gap: "0px",
         }}
-      >
-        {Array.from({ length: layout?.numOfCol }).map((_, index) => (
-          <div
-            key={index}
-            className={`p-2 border border-dashed
+        className={`${selectedElement?.layout?.id == layout?.id && 'border border-dahsed border-blue-400'}`} >
+        {
+          Array.from({ length: layout?.numOfCol }).map((_, index) => (
+            <div
+              key={index}
+              className={`p-2 border border-dashed
             ${dragOver?.index === index && dragOver?.columnId === layout?.id ? "bg-green-100" : ""}
             ${selectedElement?.layout?.id == layout?.id
-              && selectedElement?.index == index
-              && 'border-blue-500 border border-solid relative'}
+                && selectedElement?.index == index
+                && 'border-blue-500 border border-solid relative'}
             `}
-            style={{
-              display: 'flex', // Ensure flex display for alignment
-              justifyContent: layout?.[index]?.outerStyle?.justifyContent || 'center', // Apply horizontal alignment
-              alignItems: layout?.[index]?.outerStyle?.alignItems || 'center', // Apply vertical alignment
-              backgroundColor: layout?.[index]?.outerStyle?.backgroundColor || 'transparent', // Use transparent default
-            }}
-            onDragOver={(event) => onDragOverHandle(event, index)}
-            onDragLeave={(event) => onDragLeaveHandle(event, index)}
-            onDrop={onDropHandle}
-            onClick={() => setSelectedElement({ layout: layout, index: index })}
-          >
-            {getElementComponent(layout?.[index])}
-          </div>
-        ))}
+              style={{
+                display: 'flex', // Ensure flex display for alignment
+                justifyContent: layout?.[index]?.outerStyle?.justifyContent || 'center', // Apply horizontal alignment
+                alignItems: layout?.[index]?.outerStyle?.alignItems || 'center', // Apply vertical alignment
+                backgroundColor: layout?.[index]?.outerStyle?.backgroundColor || 'transparent', // Use transparent default
+              }}
+              onDragOver={(event) => onDragOverHandle(event, index)}
+              onDragLeave={(event) => onDragLeaveHandle(event, index)}
+              onDrop={onDropHandle}
+              onClick={() => setSelectedElement({ layout: layout, index: index })}
+            >
+              {getElementComponent(layout?.[index])}
+            </div>
+          ))
+        }
       </div>
-    </div>
+    </div >
   );
 }
