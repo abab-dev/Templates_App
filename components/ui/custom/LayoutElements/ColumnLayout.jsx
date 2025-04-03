@@ -50,9 +50,13 @@ export default function ColumnLayout({ layout }) {
   };
 
   const onDeleteElement = (event) => {
-    event.stopPropagation(); // Prevent triggering the setSelectedElement click
+    event.stopPropagation();
     setEmailTemplate((prevItems) =>
-      prevItems?.filter((col) => col?.id !== layout?.id)
+      prevItems?.map((col) =>
+        col?.id === layout?.id
+          ? { ...col, [selectedElement?.index]: null }
+          : col
+      )
     );
   };
 
