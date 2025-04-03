@@ -6,6 +6,27 @@ import ColourPickerField from "./Settings/ColourPickerField";
 import InputStyleField from "./Settings/InputStyleField";
 import SliderField from "./Settings/SliderField";
 import TextAreaField from "./Settings/TextAreaField";
+import SelectField from "./Settings/SelectField"; // Import the new component
+
+// Define options for the select fields
+const justifyContentOptions = [
+  { value: 'flex-start', label: 'Start' },
+  { value: 'center', label: 'Center' },
+  { value: 'flex-end', label: 'End' },
+  { value: 'space-between', label: 'Space Between' },
+  { value: 'space-around', label: 'Space Around' },
+  { value: 'space-evenly', label: 'Space Evenly' },
+];
+
+const alignItemsOptions = [
+  { value: 'flex-start', label: 'Start' },
+  { value: 'center', label: 'Center' },
+  { value: 'flex-end', label: 'End' },
+  { value: 'stretch', label: 'Stretch' },
+  { value: 'baseline', label: 'Baseline' },
+];
+
+
 export default function Settings() {
   const { selectedElement, setSelectedElement } = useSelectedElement()
   const [element, setElement] = useState()
@@ -124,14 +145,21 @@ export default function Settings() {
           <InputStyleField label={"Gap"} value={element?.outerStyle?.gap}
             onHandleStyleChange={(value) => onHandleOuterStyleChange('gap', value)} />
         }{
-          // Note: Using InputField for alignment. A Select/Dropdown component would be more user-friendly.
-          element?.outerStyle?.justifyContent &&
-          <InputField label={"Justify Content"} value={element?.outerStyle?.justifyContent}
-            onHandleInputChange={(value) => onHandleOuterStyleChange('justifyContent', value)} />
+          element?.outerStyle?.justifyContent !== undefined && // Check if property exists
+          <SelectField
+            label={"Justify Content"}
+            value={element?.outerStyle?.justifyContent}
+            options={justifyContentOptions}
+            onHandleChange={(value) => onHandleOuterStyleChange('justifyContent', value)}
+          />
         }{
-          element?.outerStyle?.alignItems &&
-          <InputField label={"Align Items"} value={element?.outerStyle?.alignItems}
-            onHandleInputChange={(value) => onHandleOuterStyleChange('alignItems', value)} />
+          element?.outerStyle?.alignItems !== undefined && // Check if property exists
+          <SelectField
+            label={"Align Items"}
+            value={element?.outerStyle?.alignItems}
+            options={alignItemsOptions}
+            onHandleChange={(value) => onHandleOuterStyleChange('alignItems', value)}
+          />
         }
 
 
