@@ -25,7 +25,8 @@ export default [
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      width: '100%'
+      width: '100%',
+      backgroundColor: '#ffffff' // Add default background color
     }
   },
   {
