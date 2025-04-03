@@ -9,13 +9,14 @@ import LogoComponent from "@/components/elements/LogoComponent";
 import LogoHeaderComponent from "@/components/elements/LogoHeaderComponent";
 import SocialIconsComponent from "@/components/elements/SocialIconsComponent";
 import DividerComponent from "@/components/elements/DividerComponent";
-import { X } from "lucide-react";
+import { X, ArrowUp, ArrowDown } from "lucide-react";
 
 export default function ColumnLayout({ layout }) {
   const [dragOver, setDragOver] = useState(null);
   const { emailTemplate, setEmailTemplate } = useEmailTemplate();
   const { dragElementLayout, setDragElementLayout } = useDragElementLayout(); // setDragElementLayout is not used here, but kept for consistency if needed elsewhere
   const { selectedElement, setSelectedElement } = useSelectedElement();
+  const index = emailTemplate.findIndex((col) => col?.id === layout?.id);
 
   const onDragOverHandle = (event, index) => {
     event.preventDefault();
@@ -85,8 +86,26 @@ export default function ColumnLayout({ layout }) {
     return element?.type || "Drag element here";
   };
 
+  const moveLayoutUp = (event) => {
+    event.stopPropagation();
+    const newEmailTemplate = [...emailTemplate];
+    if (index > 0 && newEmailTemplate) {
+      [newEmailTemplate[index], newEmailTemplate[index - 1]] = [newEmailTemplate[index - 1], newEmailTemplate[index]];
+      setEmailTemplate(newEmailTemplate);
+    }
+  };
+
+  const moveLayoutDown = (event) => {
+    event.stopPropagation();
+    const newEmailTemplate = [...emailTemplate];
+    if (index < emailTemplate?.length - 1 && newEmailTemplate) {
+      [newEmailTemplate[index], newEmailTemplate[index + 1]] = [newEmailTemplate[index + 1], newEmailTemplate[index]];
+      setEmailTemplate(newEmailTemplate);
+    }
+  };
+
   return (
-    <div>
+    <div className="relative">
       <div
         style={{
           display: "grid",
@@ -113,18 +132,34 @@ export default function ColumnLayout({ layout }) {
             onClick={() => setSelectedElement({ layout: layout, index: index })}
           >
             {getElementComponent(layout?.[index])}
-            {selectedElement?.layout?.id == layout?.id && selectedElement?.index == index && (
-              <button
-                onClick={(event) => onDeleteElement(event, index)}
-                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
-                style={{ zIndex: 10 }} // Ensure the button is on top
-              >
-                <X size={12} />
-              </button>
-            )}
           </div>
         ))}
       </div>
+      {selectedElement?.layout?.id == layout?.id && (
+        <div className="absolute top-0 right-0 flex flex-col">
+          <button
+            onClick={(event) => onDeleteElement(event, index)}
+            className="p-1 bg-red-500 text-white rounded-full"
+            style={{ zIndex: 10 }}
+          >
+            <X size={12} />
+          </button>
+          <button
+            onClick={moveLayoutUp}
+            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
+            disabled={index === 0}
+          >
+            <ArrowUp size={16} />
+          </button>
+          <button
+            onClick={moveLayoutDown}
+            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
+            disabled={index === emailTemplate?.length - 1}
+          >
+            <ArrowDown size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
