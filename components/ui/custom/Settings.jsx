@@ -34,6 +34,25 @@ export default function Settings() {
     }
     setSelectedElement(updatedData)
   }
+  const onHandleOuterStyleChange = (fieldName, fieldValue) => {
+    const updatedData = {
+      ...selectedElement,
+      layout: {
+        ...selectedElement.layout,
+        [selectedElement.index]: {
+          ...selectedElement.layout[selectedElement.index],
+          outerStyle: {
+            ...selectedElement?.layout[selectedElement.index]?.outerStyle,
+            [fieldName]: fieldValue
+
+          }
+        }
+      }
+
+    }
+    console.log(selectedElement?.layout[selectedElement.index]?.outerStyle)
+    setSelectedElement(updatedData)
+  }
   return (
     <div className="p-5 flex flex-col gap-4">
       <h2 className="font-bold text-xl">Settings</h2>
@@ -77,6 +96,16 @@ export default function Settings() {
         <SliderField label={"Width"} value={element?.style?.width} type={"%"}
           onHandleStyleChange={(value) => onHandleStyleChange('width', value)} />
       }
+      <div>
+        <h2 className="font-bold mb-2">Outer Style</h2>
+        {
+          element?.outerStyle?.backgroundColor &&
+          <ColourPickerField label={"Color"} value={element?.outerStyle?.backgroundColor}
+            onHandleStyleChange={(value) => onHandleOuterStyleChange('backgroundColor', value)} />
+        }
+
+
+      </div>
     </div>
   )
 }
