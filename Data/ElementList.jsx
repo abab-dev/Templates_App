@@ -34,7 +34,7 @@ export default [
     label: 'Text',
     textarea: 'Sample Text',
     style: {
-      backgroundColor: '',
+      backgroundColor: '#fff',
       color: '#000000',
       padding: '10px',
       textAlign: 'center',
