@@ -7,6 +7,7 @@ import TextComponent from "@/components/elements/TestComponent"; // Assuming typ
 import ImageComponent from "@/components/elements/ImageComponent";
 import LogoComponent from "@/components/elements/LogoComponent";
 import DividerComponent from "@/components/elements/DividerComponent";
+import { X } from "lucide-react";
 
 export default function ColumnLayout({ layout }) {
   const [dragOver, setDragOver] = useState(null);
@@ -45,6 +46,17 @@ export default function ColumnLayout({ layout }) {
     setDragOver(null); // Reset highlight after drop
   };
 
+  const onDeleteElement = (event, index) => {
+    event.stopPropagation(); // Prevent triggering the setSelectedElement click
+    setEmailTemplate((prevItems) =>
+      prevItems?.map((col) =>
+        col?.id === layout?.id
+          ? { ...col, [index]: null } // Set the element to null to delete it
+          : col
+      )
+    );
+  };
+
   const getElementComponent = (element) => {
     console.log(element)
     if (element?.type == "Button") {
@@ -79,7 +91,7 @@ export default function ColumnLayout({ layout }) {
             key={index}
             className={`p-2 border border-dashed
             ${dragOver?.index === index && dragOver?.columnId === layout?.id ? "bg-green-100" : ""}
-            ${selectedElement?.layout?.id == layout?.id && selectedElement?.index == index && 'border-blue-500 border border-solid'}
+            ${selectedElement?.layout?.id == layout?.id && selectedElement?.index == index && 'border-blue-500 border border-solid relative'}
             `}
             style={{
               display: 'flex', // Ensure flex display for alignment
@@ -93,6 +105,15 @@ export default function ColumnLayout({ layout }) {
             onClick={() => setSelectedElement({ layout: layout, index: index })}
           >
             {getElementComponent(layout?.[index])}
+            {selectedElement?.layout?.id == layout?.id && selectedElement?.index == index && (
+              <button
+                onClick={(event) => onDeleteElement(event, index)}
+                className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
+                style={{ zIndex: 10 }} // Ensure the button is on top
+              >
+                <X size={12} />
+              </button>
+            )}
           </div>
         ))}
       </div>
