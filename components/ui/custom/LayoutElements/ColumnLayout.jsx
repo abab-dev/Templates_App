@@ -107,7 +107,7 @@ export default function ColumnLayout({ layout }) {
   return (
     <div className="relative group">
       {selectedElement?.layout?.id == layout?.id && (
-        <div className="absolute top-0 right-0 flex flex-col z-10">
+        <div className="absolute top-0 -right-10 flex gap-2  flex-col z-10">
           <button
             onClick={(event) => onDeleteElement(event, index)}
             className="p-1 bg-red-500 text-white rounded-full"
@@ -143,7 +143,9 @@ export default function ColumnLayout({ layout }) {
             key={index}
             className={`p-2 border border-dashed
             ${dragOver?.index === index && dragOver?.columnId === layout?.id ? "bg-green-100" : ""}
-            ${selectedElement?.layout?.id == layout?.id && selectedElement?.index == index && 'border-blue-500 border border-solid relative'}
+            ${selectedElement?.layout?.id == layout?.id
+              && selectedElement?.index == index
+              && 'border-blue-500 border border-solid relative'}
             `}
             style={{
               display: 'flex', // Ensure flex display for alignment
