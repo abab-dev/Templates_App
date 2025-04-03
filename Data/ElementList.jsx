@@ -34,7 +34,7 @@ export default [
     label: 'Text',
     textarea: 'Sample Text',
     style: {
-      backgroundColor: '#fff',
+      backgroundColor: '',
       color: '#000000',
       padding: '10px',
       textAlign: 'center',
@@ -51,7 +51,7 @@ export default [
     icon: Image,
     type: 'Image',
     label: 'Image',
-    imageUrl: "/image.png",
+    imageUrl: "/logo.png",
     alt: 'Image',
     url: '#',
     style: {
@@ -74,7 +74,7 @@ export default [
     icon: Frame,
     type: 'Logo',
     label: 'Logo',
-    imageUrl: "/logo.svg",
+    imageUrl: "/next.svg",
     alt: 'logo',
     url: '#',
     style: {

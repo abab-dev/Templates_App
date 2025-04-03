@@ -1,0 +1,512 @@
+"use client";
+import React, { useState, useEffect, useRef } from "react"; // Import useRef
+import { useSelectedElement, useEmailTemplate } from "@/app/provider";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+
+// Basic Color Picker (replace with a proper one if available)
+const ColorPicker = ({ value, onChange, ...props }) => (
+  <input type="color" value={value || '#000000'} onChange={onChange} {...props} className="w-full h-8 border border-gray-300 rounded cursor-pointer" />
+);
+
+export default function Settings() {
+  const { selectedElement } = useSelectedElement();
+  const { setEmailTemplate } = useEmailTemplate();
+  const [elementData, setElementData] = useState(null);
+  const isInitialLoad = useRef(true); // Flag to track initial load vs user change
+
+  // --- Effect 1: Update local state when selected element changes ---
+  useEffect(() => {
+    if (selectedElement && selectedElement.layout && typeof selectedElement.index === 'number') {
+      const currentElement = selectedElement.layout[selectedElement.index];
+      isInitialLoad.current = true; // Mark as initial load for this element
+      setElementData(currentElement);
+    } else {
+      setElementData(null); // Reset if no valid element is selected
+    }
+  }, [selectedElement]);
+
+  // --- Function to update the email template state (called from effect) ---
+  const updateEmailTemplate = (updatedElement) => {
+    if (!selectedElement || !selectedElement.layout || typeof selectedElement.index !== 'number' || !updatedElement) return;
+
+    setEmailTemplate((prevItems) =>
+      prevItems.map((layout) => {
+        if (layout?.id === selectedElement.layout.id) {
+          return {
+            ...layout,
+            [selectedElement.index]: updatedElement,
+          };
+        }
+        return layout;
+      })
+    );
+  };
+
+  // --- Effect 2: Update global state AFTER local state changes (if not initial load) ---
+  useEffect(() => {
+    // Prevent running on the very first render before selection or after selection change
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false; // Unset the flag after the initial data is set
+      return; // Don't update global state yet
+    }
+
+    // Only update if elementData exists (meaning an element is selected and loaded)
+    if (elementData) {
+       // console.log("Updating global state with:", elementData); // Debug log
+       updateEmailTemplate(elementData);
+    }
+  }, [elementData]); // Dependency: Run this effect when elementData changes
+
+
+  // --- Generic handler for input/select changes (ONLY updates local state) ---
+  const handleChange = (eventOrValue) => {
+    let name, value, type;
+
+    if (typeof eventOrValue === 'object' && eventOrValue !== null && eventOrValue.target) {
+      name = eventOrValue.target.name;
+      value = eventOrValue.target.value;
+      type = eventOrValue.target.type;
+    } else if (typeof eventOrValue === 'object' && eventOrValue !== null && eventOrValue.name && typeof eventOrValue.value !== 'undefined') {
+      name = eventOrValue.name;
+      value = eventOrValue.value;
+      type = eventOrValue.type || 'text';
+    } else {
+       console.error("handleChange received unexpected input:", eventOrValue);
+       return;
+    }
+
+    const [key, subKey] = name.split('.');
+
+    setElementData((prevData) => {
+      if (!prevData) return null;
+
+      let newValue = type === 'number' ? (value === '' ? null : parseFloat(value)) : value; // Store empty number as null or keep '' based on preference
+      let updatedData;
+
+      if (subKey) {
+        updatedData = {
+          ...prevData,
+          [key]: {
+            ...(prevData[key] || {}),
+            [subKey]: newValue,
+          },
+        };
+      } else {
+        updatedData = {
+          ...prevData,
+          [name]: newValue,
+        };
+      }
+      // --- REMOVED updateEmailTemplate(updatedData) FROM HERE ---
+      return updatedData; // Update local state ONLY
+    });
+  };
+
+  // Handler specifically for ShadCN Select components
+  const handleSelectChange = (name) => (value) => {
+     // Simulate event structure for consistency if needed, or just pass name/value
+     handleChange({ name, value });
+  };
+
+
+  // Render specific settings based on element type (render logic remains the same)
+  const renderSettings = () => {
+      if (!elementData) return <p className="text-center text-gray-500 mt-10">Select an element to edit.</p>;
+
+      // Helper function for common style fields
+      const commonStyleFields = (styleObject, styleKey = 'style') => (
+        <>
+          <div className="grid grid-cols-3 gap-2 items-center">
+            <Label htmlFor={`${styleKey}.backgroundColor`}>Background</Label>
+            <ColorPicker
+              name={`${styleKey}.backgroundColor`}
+              value={styleObject?.backgroundColor || ''} // Default to empty string if undefined
+              onChange={handleChange}
+              className="col-span-2"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-2 items-center">
+            <Label htmlFor={`${styleKey}.padding`}>Padding (px)</Label>
+            <Input
+              type="number"
+              name={`${styleKey}.padding`}
+              // Use empty string for controlled input if value can be null/undefined
+              value={styleObject?.padding === null || styleObject?.padding === undefined ? '' : parseInt(styleObject.padding)}
+              onChange={handleChange}
+              min="0"
+              className="col-span-2"
+            />
+          </div>
+        </>
+      );
+
+      // Helper function for common outer container style fields
+      const commonOuterStyleFields = (outerStyleObject, outerStyleKey = 'outerStyle') => (
+        <>
+          <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Container Styles</h4>
+          <div className="grid grid-cols-3 gap-2 items-center">
+            <Label htmlFor={`${outerStyleKey}.backgroundColor`}>Outer BG</Label>
+            <ColorPicker
+              name={`${outerStyleKey}.backgroundColor`}
+              value={outerStyleObject?.backgroundColor || ''}
+              onChange={handleChange}
+              className="col-span-2"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-2 items-center">
+            <Label htmlFor={`${outerStyleKey}.width`}>Width</Label>
+            <Input
+              type="text"
+              name={`${outerStyleKey}.width`}
+              value={outerStyleObject?.width || '100%'}
+              onChange={handleChange}
+              placeholder="e.g., 100% or 600px"
+              className="col-span-2"
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-2 items-center">
+            <Label htmlFor={`${outerStyleKey}.display`}>Display</Label>
+            <Select
+                name={`${outerStyleKey}.display`}
+                value={outerStyleObject?.display || 'block'} // Default to block
+                onValueChange={handleSelectChange(`${outerStyleKey}.display`)}
+              >
+              <SelectTrigger className="col-span-2"><SelectValue placeholder="Display" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="block">Block</SelectItem>
+                <SelectItem value="flex">Flex</SelectItem>
+                {/* Add other display options if needed */}
+              </SelectContent>
+            </Select>
+          </div>
+          {/* Conditional Flexbox Alignment Fields */}
+          {outerStyleObject?.display === 'flex' && (
+            <>
+              <div className="grid grid-cols-3 gap-2 items-center mt-1">
+                <Label htmlFor={`${outerStyleKey}.justifyContent`}>Justify</Label>
+                <Select
+                  name={`${outerStyleKey}.justifyContent`}
+                  value={outerStyleObject?.justifyContent || 'center'} // Default for flex
+                  onValueChange={handleSelectChange(`${outerStyleKey}.justifyContent`)}
+                >
+                  <SelectTrigger className="col-span-2"><SelectValue placeholder="Justify" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="flex-start">Start</SelectItem>
+                    <SelectItem value="center">Center</SelectItem>
+                    <SelectItem value="flex-end">End</SelectItem>
+                    <SelectItem value="space-between">Space Between</SelectItem>
+                    <SelectItem value="space-around">Space Around</SelectItem>
+                    <SelectItem value="space-evenly">Space Evenly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-3 gap-2 items-center mt-1">
+                <Label htmlFor={`${outerStyleKey}.alignItems`}>Align</Label>
+                <Select
+                  name={`${outerStyleKey}.alignItems`}
+                  value={outerStyleObject?.alignItems || 'center'} // Default for flex
+                  onValueChange={handleSelectChange(`${outerStyleKey}.alignItems`)}
+                >
+                  <SelectTrigger className="col-span-2"><SelectValue placeholder="Align" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="flex-start">Start</SelectItem>
+                    <SelectItem value="center">Center</SelectItem>
+                    <SelectItem value="flex-end">End</SelectItem>
+                    <SelectItem value="stretch">Stretch</SelectItem>
+                    <SelectItem value="baseline">Baseline</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+        </>
+      );
+
+    // --- SWITCH statement remains the same ---
+    // Ensure value props handle potential null/undefined from parseFloat('') -> null
+    // Example for a number input:
+    // value={elementData.style?.fontSize === null || elementData.style?.fontSize === undefined ? '' : parseInt(elementData.style.fontSize)}
+
+     switch (elementData.type) {
+      case "Button":
+        return (
+          <div className="space-y-3">
+            <h3 className="font-semibold mb-3">Button Settings</h3>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="content">Text</Label>
+              <Input name="content" value={elementData.content || ''} onChange={handleChange} className="col-span-2"/>
+            </div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="url">URL</Label>
+              <Input name="url" value={elementData.url || '#'} onChange={handleChange} className="col-span-2"/>
+            </div>
+
+            <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Button Styles</h4>
+             <div className="grid grid-cols-3 gap-2 items-center">
+                <Label htmlFor="style.color">Text Color</Label>
+                <ColorPicker name="style.color" value={elementData.style?.color || '#ffffff'} onChange={handleChange} className="col-span-2"/>
+             </div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.textAlign">Text Align</Label>
+              <Select
+                 name="style.textAlign"
+                 value={elementData.style?.textAlign || 'center'}
+                 onValueChange={handleSelectChange('style.textAlign')}
+               >
+                <SelectTrigger className="col-span-2"><SelectValue placeholder="Align" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.fontSize">Font Size (px)</Label>
+              <Input className="col-span-2" type="number" name="style.fontSize"
+                 value={elementData.style?.fontSize === null || elementData.style?.fontSize === undefined ? '' : parseInt(elementData.style.fontSize)}
+                 onChange={handleChange} min="1"/>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.fontWeight">Font Weight</Label>
+               <Select
+                 name="style.fontWeight"
+                 value={elementData.style?.fontWeight || 'normal'}
+                 onValueChange={handleSelectChange('style.fontWeight')}
+                >
+                <SelectTrigger className="col-span-2"><SelectValue placeholder="Weight" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="bold">Bold</SelectItem>
+                  <SelectItem value="lighter">Lighter</SelectItem>
+                  <SelectItem value="bolder">Bolder</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                  <SelectItem value="200">200</SelectItem>
+                  <SelectItem value="300">300</SelectItem>
+                  <SelectItem value="400">400</SelectItem>
+                  <SelectItem value="500">500</SelectItem>
+                  <SelectItem value="600">600</SelectItem>
+                  <SelectItem value="700">700</SelectItem>
+                  <SelectItem value="800">800</SelectItem>
+                  <SelectItem value="900">900</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.borderRadius">Border Radius (px)</Label>
+              <Input className="col-span-2" type="number" name="style.borderRadius"
+                 value={elementData.style?.borderRadius === null || elementData.style?.borderRadius === undefined ? '' : parseInt(elementData.style.borderRadius)}
+                 onChange={handleChange} min="0"/>
+            </div>
+            {/* Common style fields like background, padding */}
+            {commonStyleFields(elementData.style, 'style')}
+
+            {/* Container (Outer) Styles */}
+            {commonOuterStyleFields(elementData.outerStyle, 'outerStyle')}
+          </div>
+        );
+      case "Text":
+        return (
+          <div className="space-y-3">
+            <h3 className="font-semibold mb-3">Text Settings</h3>
+            <div className="grid grid-cols-1 gap-1 items-center"> {/* Full width for textarea */}
+              <Label htmlFor="textarea">Content</Label>
+              <Textarea name="textarea" value={elementData.textarea || ''} onChange={handleChange} rows={4}/>
+            </div>
+
+             <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Text Styles</h4>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.color">Color</Label>
+              <ColorPicker name="style.color" value={elementData.style?.color || '#000000'} onChange={handleChange} className="col-span-2"/>
+            </div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.textAlign">Align</Label>
+              <Select
+                 name="style.textAlign"
+                 value={elementData.style?.textAlign || 'center'}
+                 onValueChange={handleSelectChange('style.textAlign')}
+               >
+                <SelectTrigger className="col-span-2"><SelectValue placeholder="Align" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                  <SelectItem value="justify">Justify</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.fontSize">Font Size (px)</Label>
+              <Input className="col-span-2" type="number" name="style.fontSize"
+                  value={elementData.style?.fontSize === null || elementData.style?.fontSize === undefined ? '' : parseInt(elementData.style.fontSize)}
+                  onChange={handleChange} min="1"/>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.fontWeight">Font Weight</Label>
+              <Select
+                 name="style.fontWeight"
+                 value={elementData.style?.fontWeight || 'normal'}
+                 onValueChange={handleSelectChange('style.fontWeight')}
+               >
+                <SelectTrigger className="col-span-2"><SelectValue placeholder="Weight" /></SelectTrigger>
+                <SelectContent>
+                   <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="bold">Bold</SelectItem>
+                  <SelectItem value="lighter">Lighter</SelectItem>
+                  <SelectItem value="bolder">Bolder</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                  <SelectItem value="200">200</SelectItem>
+                  <SelectItem value="300">300</SelectItem>
+                  <SelectItem value="400">400</SelectItem>
+                  <SelectItem value="500">500</SelectItem>
+                  <SelectItem value="600">600</SelectItem>
+                  <SelectItem value="700">700</SelectItem>
+                  <SelectItem value="800">800</SelectItem>
+                  <SelectItem value="900">900</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.textTransform">Transform</Label>
+              <Select
+                 name="style.textTransform"
+                 value={elementData.style?.textTransform || 'none'}
+                 onValueChange={handleSelectChange('style.textTransform')}
+                >
+                <SelectTrigger className="col-span-2"><SelectValue placeholder="Transform" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="uppercase">Uppercase</SelectItem>
+                  <SelectItem value="lowercase">Lowercase</SelectItem>
+                  <SelectItem value="capitalize">Capitalize</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {/* Common style fields like background, padding */}
+            {commonStyleFields(elementData.style, 'style')}
+
+            {/* Container (Outer) Styles */}
+            {commonOuterStyleFields(elementData.outerStyle, 'outerStyle')}
+          </div>
+        );
+      case "Image":
+      case "Logo":
+      case "LogoHeader":
+         return (
+          <div className="space-y-3">
+            <h3 className="font-semibold mb-3">{elementData.type} Settings</h3>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="imageUrl">Image URL</Label>
+              <Input name="imageUrl" value={elementData.imageUrl || ''} onChange={handleChange} className="col-span-2"/>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="alt">Alt Text</Label>
+              <Input name="alt" value={elementData.alt || ''} onChange={handleChange} className="col-span-2"/>
+            </div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="url">Link URL (Optional)</Label>
+              <Input name="url" value={elementData.url || ''} onChange={handleChange} placeholder="Leave empty for no link" className="col-span-2"/>
+            </div>
+
+            <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Image Styles</h4>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.width">Width</Label>
+              <Input className="col-span-2" type="text" name="style.width" value={elementData.style?.width || '100%'} onChange={handleChange} placeholder="e.g., 70% or 150px"/>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.height">Height</Label>
+              <Input className="col-span-2" type="text" name="style.height" value={elementData.style?.height || 'auto'} onChange={handleChange} placeholder="e.g., 50% or 100px"/>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.borderRadius">Border Radius (px)</Label>
+              <Input className="col-span-2" type="number" name="style.borderRadius"
+                 value={elementData.style?.borderRadius === null || elementData.style?.borderRadius === undefined ? '' : parseInt(elementData.style.borderRadius)}
+                 onChange={handleChange} min="0"/>
+            </div>
+             {/* Common style fields like background, padding */}
+            {commonStyleFields(elementData.style, 'style')}
+
+            {/* Container (Outer) Styles */}
+            {commonOuterStyleFields(elementData.outerStyle, 'outerStyle')}
+          </div>
+        );
+       case "Divider":
+        return (
+          <div className="space-y-3">
+            <h3 className="font-semibold mb-3">Divider Settings</h3>
+             {/* No direct content for divider */}
+             <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Divider Styles</h4>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.color">Color</Label>
+              <ColorPicker name="style.color" value={elementData.style?.color || '#000000'} onChange={handleChange} className="col-span-2"/>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center">
+              <Label htmlFor="style.width">Width</Label>
+              <Input className="col-span-2" type="text" name="style.width" value={elementData.style?.width || '100%'} onChange={handleChange} placeholder="e.g., 100% or 600px"/>
+            </div>
+             <div className="grid grid-cols-3 gap-2 items-center"> {/* Changed label to Vertical Padding */}
+              <Label htmlFor="style.padding">Vertical Padding (px)</Label>
+              <Input className="col-span-2" type="number" name="style.padding"
+                 value={elementData.style?.padding === null || elementData.style?.padding === undefined ? '' : parseInt(elementData.style.padding)}
+                 onChange={handleChange} min="0"/>
+            </div>
+          </div>
+        );
+        case "SocialIcons":
+          return (
+             <div className="space-y-3">
+              <h3 className="font-semibold">Social Icons Settings</h3>
+              {/* --- Add actual Social Icon settings UI here --- */}
+
+               <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Icon Styles</h4>
+                <div className="grid grid-cols-3 gap-2 items-center">
+                   <Label htmlFor="style.width">Icon Size (px)</Label>
+                   <Input className="col-span-2" type="number" name="style.width"
+                    value={elementData.style?.width === null || elementData.style?.width === undefined ? '' : parseInt(elementData.style.width)}
+                    onChange={handleChange} min="1"/>
+                 </div>
+                 {/* Assuming height might be same as width or handled differently */}
+                 {/* <div className="grid grid-cols-3 gap-2 items-center">
+                   <Label htmlFor="style.height">Icon Height (px)</Label>
+                   <Input className="col-span-2" type="number" name="style.height" value={parseInt(elementData.style?.height) || 40} onChange={handleChange} min="1"/>
+                 </div> */}
+
+               <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Container Styles</h4>
+                <div className="grid grid-cols-3 gap-2 items-center">
+                  <Label htmlFor="outerStyle.gap">Gap (px)</Label>
+                  <Input className="col-span-2" type="number" name="outerStyle.gap"
+                    value={elementData.outerStyle?.gap === null || elementData.outerStyle?.gap === undefined ? '' : parseInt(elementData.outerStyle.gap)}
+                    onChange={handleChange} min="0"/>
+                </div>
+                 {commonOuterStyleFields(elementData.outerStyle, 'outerStyle')} {/* Reuse alignment etc. */}
+
+                 {/* <h4 className="font-medium text-sm mt-4 mb-2 col-span-3 border-t pt-2">Icons & Links</h4> */}
+                 {/* Add UI here to loop through elementData.socialIcons */}
+                 {/* Allow editing URL for each icon */}
+                 {/* Allow adding/removing icons (linking to 'options'?) */}
+                 <p className="text-sm text-red-500 font-semibold pt-4">Icon list editing not yet implemented.</p>
+             </div>
+          );
+      default:
+        return <p>Settings for element type "{elementData.type}" not implemented yet.</p>;
+    }
+
+  };
+
+
+  return (
+    <div className="p-4 border-l h-full overflow-y-auto bg-white shadow-sm w-80">
+      {selectedElement && elementData ? (
+        renderSettings()
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full text-center">
+            <p className="text-gray-500">Select an element</p>
+            <p className="text-xs text-gray-400 mt-1">Click on an element on the canvas to edit its properties here.</p>
+        </div>
+      )}
+    </div>
+  );
+}
