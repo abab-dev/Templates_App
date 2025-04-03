@@ -105,7 +105,32 @@ export default function ColumnLayout({ layout }) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative group">
+      {selectedElement?.layout?.id == layout?.id && (
+        <div className="absolute top-0 right-0 flex flex-col z-10">
+          <button
+            onClick={(event) => onDeleteElement(event, index)}
+            className="p-1 bg-red-500 text-white rounded-full"
+            style={{ zIndex: 10 }}
+          >
+            <X size={12} />
+          </button>
+          <button
+            onClick={moveLayoutUp}
+            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
+            disabled={index === 0}
+          >
+            <ArrowUp size={16} />
+          </button>
+          <button
+            onClick={moveLayoutDown}
+            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
+            disabled={index === emailTemplate?.length - 1}
+          >
+            <ArrowDown size={16} />
+          </button>
+        </div>
+      )}
       <div
         style={{
           display: "grid",
@@ -135,31 +160,6 @@ export default function ColumnLayout({ layout }) {
           </div>
         ))}
       </div>
-      {selectedElement?.layout?.id == layout?.id && (
-        <div className="absolute top-0 right-0 flex flex-col">
-          <button
-            onClick={(event) => onDeleteElement(event, index)}
-            className="p-1 bg-red-500 text-white rounded-full"
-            style={{ zIndex: 10 }}
-          >
-            <X size={12} />
-          </button>
-          <button
-            onClick={moveLayoutUp}
-            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
-            disabled={index === 0}
-          >
-            <ArrowUp size={16} />
-          </button>
-          <button
-            onClick={moveLayoutDown}
-            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
-            disabled={index === emailTemplate?.length - 1}
-          >
-            <ArrowDown size={16} />
-          </button>
-        </div>
-      )}
     </div>
   );
 }
