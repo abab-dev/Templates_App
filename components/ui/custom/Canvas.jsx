@@ -2,13 +2,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDragElementLayout, useEmailTemplate, useScreenSize } from '@/app/provider'
 import ColumnLayout from './LayoutElements/ColumnLayout'
+import ViewCodeDialog from './ViewHtmlDialog'
 
-export default function Canvas({ viewHTMLCode }) {
+export default function Canvas({ viewHTMLCode, closeDialog }) {
   const htmlRef = useRef()
   const { screenSize } = useScreenSize()
   const { dragElementLayout, setDragElementLayout } = useDragElementLayout()
   const { emailTemplate, setEmailTemplate } = useEmailTemplate()
   const [dragOver, setDragOver] = useState(false)
+  const [htmlCode, setHtmlCode] = useState()
 
   const onDragOver = (e) => {
     e.preventDefault()
@@ -41,6 +43,7 @@ export default function Canvas({ viewHTMLCode }) {
     if (htmlRef.current) {
       const htmlContent = htmlRef.current.innerHTML
       console.log(htmlContent)
+      setHtmlCode(htmlContent)
 
     }
   }
@@ -67,6 +70,7 @@ export default function Canvas({ viewHTMLCode }) {
           </p>
         )}
       </div>
+      <ViewCodeDialog openDialog={viewHTMLCode} htmlCode={htmlCode} closeDialog={closeDialog}></ViewCodeDialog>
     </div>
   )
 }
