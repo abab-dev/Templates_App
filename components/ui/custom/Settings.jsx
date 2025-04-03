@@ -5,6 +5,7 @@ import InputField from "./Settings/InputField";
 import ColourPickerField from "./Settings/ColourPickerField";
 import InputStyleField from "./Settings/InputStyleField";
 import SliderField from "./Settings/SliderField";
+import TextAreaField from "./Settings/TextAreaField";
 export default function Settings() {
   const { selectedElement, setSelectedElement } = useSelectedElement()
   const [element, setElement] = useState()
@@ -61,6 +62,11 @@ export default function Settings() {
         <InputField label={'Content'} value={element?.content}
           onHandleInputChange={(value) => onHandleInputChange("content", value)}></InputField>
       }{
+        element?.textarea &&
+        <TextAreaField label={'TextArea'} value={element?.textarea}
+          onHandleInputChange={(value) => onHandleInputChange("textarea", value)}></TextAreaField>
+      }
+      {
         element?.style?.fontSize &&
         <InputStyleField label={"fontsize"} value={element?.style?.fontSize}
           onHandleStyleChange={(value) => onHandleStyleChange('fontSize', value)} />
@@ -71,13 +77,8 @@ export default function Settings() {
           onHandleInputChange={(value) => onHandleInputChange("url", value)}></InputField>
       }
       {
-        element?.textarea &&
-        <InputField label={'Content'} value={element?.textarea}
-          onHandleInputChange={(value) => onHandleInputChange("textarea", value)}></InputField>
-      }
-      {
         element?.style?.backgroundColor &&
-        <ColourPickerField label={"Color"} value={element?.style?.backgroundColor}
+        <ColourPickerField label={"Background Color"} value={element?.style?.backgroundColor}
           onHandleStyleChange={(value) => onHandleStyleChange('backgroundColor', value)} />
       }{
         element?.style?.color &&
