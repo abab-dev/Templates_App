@@ -4,7 +4,7 @@ export default function TextAreaField({ label, value, onHandleInputChange }) {
   return (<div>
     <label>{label}</label>
     <Textarea value={value}
-      onChange={(e) => onHandleInputChange(e.targe.value)}></Textarea>
+      onChange={(e) => onHandleInputChange(e.target.value)}></Textarea>
   </div>)
 
 }

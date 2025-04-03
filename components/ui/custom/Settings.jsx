@@ -65,6 +65,14 @@ export default function Settings() {
         element?.textarea &&
         <TextAreaField label={'TextArea'} value={element?.textarea}
           onHandleInputChange={(value) => onHandleInputChange("textarea", value)}></TextAreaField>
+      }{
+        element?.imageUrl &&
+        <InputField label={'Image URL'} value={element?.imageUrl}
+          onHandleInputChange={(value) => onHandleInputChange("imageUrl", value)}></InputField>
+      }{
+        element?.alt &&
+        <InputField label={'Alt Text'} value={element?.alt}
+          onHandleInputChange={(value) => onHandleInputChange("alt", value)}></InputField>
       }
       {
         element?.style?.fontSize &&
@@ -94,15 +102,27 @@ export default function Settings() {
           onHandleStyleChange={(value) => onHandleStyleChange('borderRadius', value)} />
       }{
         element?.style?.width &&
-        <SliderField label={"Width"} value={element?.style?.width} type={"%"}
+        <SliderField label={"Width"} value={element?.style?.width} type={element?.type === 'Image' || element?.type === 'Logo' || element?.type === 'LogoHeader' ? "%" : "px"} // Use % for images/logos
           onHandleStyleChange={(value) => onHandleStyleChange('width', value)} />
+      }{
+        element?.style?.height &&
+        <SliderField label={"Height"} value={element?.style?.height} type={element?.type === 'Image' || element?.type === 'Logo' || element?.type === 'LogoHeader' ? "%" : "px"} // Use % for images/logos
+          onHandleStyleChange={(value) => onHandleStyleChange('height', value)} />
+      }{
+        element?.style?.margin &&
+        <InputStyleField label={"Margin"} value={element?.style?.margin}
+          onHandleStyleChange={(value) => onHandleStyleChange('margin', value)} />
       }
       <div>
         <h2 className="font-bold mb-2">Outer Style</h2>
         {
           element?.outerStyle?.backgroundColor &&
-          <ColourPickerField label={"Color"} value={element?.outerStyle?.backgroundColor}
+          <ColourPickerField label={"Background Color"} value={element?.outerStyle?.backgroundColor}
             onHandleStyleChange={(value) => onHandleOuterStyleChange('backgroundColor', value)} />
+        }{
+          element?.outerStyle?.gap &&
+          <InputStyleField label={"Gap"} value={element?.outerStyle?.gap}
+            onHandleStyleChange={(value) => onHandleOuterStyleChange('gap', value)} />
         }
 
 
