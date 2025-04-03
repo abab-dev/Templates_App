@@ -6,6 +6,8 @@ import ButtonComponent from "@/components/elements/ButtonComponent";
 import TextComponent from "@/components/elements/TestComponent"; // Assuming typo: TestComponent -> TextComponent
 import ImageComponent from "@/components/elements/ImageComponent";
 import LogoComponent from "@/components/elements/LogoComponent";
+import LogoHeaderComponent from "@/components/elements/LogoHeaderComponent";
+import SocialIconsComponent from "@/components/elements/SocialIconsComponent";
 import DividerComponent from "@/components/elements/DividerComponent";
 import { X } from "lucide-react";
 
@@ -70,6 +72,12 @@ export default function ColumnLayout({ layout }) {
     }
     else if (element?.type == "Logo") {
       return (<LogoComponent{...element} />)
+    }
+    else if (element?.type == "LogoHeader") {
+      return (<LogoHeaderComponent {...element} />)
+    }
+    else if (element?.type == "SocialIcons") {
+      return (<SocialIconsComponent {...element} />)
     }
     else if (element?.type == "Divider") {
       return (<DividerComponent{...element} />)
