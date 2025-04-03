@@ -13,17 +13,12 @@ const justifyContentOptions = [
   { value: 'flex-start', label: 'Start' },
   { value: 'center', label: 'Center' },
   { value: 'flex-end', label: 'End' },
-  { value: 'space-between', label: 'Space Between' },
-  { value: 'space-around', label: 'Space Around' },
-  { value: 'space-evenly', label: 'Space Evenly' },
 ];
 
 const alignItemsOptions = [
   { value: 'flex-start', label: 'Start' },
   { value: 'center', label: 'Center' },
   { value: 'flex-end', label: 'End' },
-  { value: 'stretch', label: 'Stretch' },
-  { value: 'baseline', label: 'Baseline' },
 ];
 
 
