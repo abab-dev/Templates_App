@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useDragElementLayout, useEmailTemplate, useScreenSize } from '@/app/provider'
 import ColumnLayout from './LayoutElements/ColumnLayout'
 
-export default function Canvas(viewHTMLCode) {
+export default function Canvas({ viewHTMLCode }) {
   const htmlRef = useRef()
   const { screenSize } = useScreenSize()
   const { dragElementLayout, setDragElementLayout } = useDragElementLayout()
@@ -33,11 +33,13 @@ export default function Canvas(viewHTMLCode) {
     }
   }
   useEffect(() => {
-    viewHTMLCode && getHTMLCode()
+    if (viewHTMLCode) {
+      getHTMLCode()
+    }
   }, [viewHTMLCode])
   const getHTMLCode = () => {
     if (htmlRef.current) {
-      const htmlContent = htmlRef.current.InnerHTML
+      const htmlContent = htmlRef.current.innerHTML
       console.log(htmlContent)
 
     }
