@@ -77,12 +77,15 @@ export default function ColumnLayout({ layout }) {
         {Array.from({ length: layout?.numOfCol }).map((_, index) => (
           <div
             key={index}
-            className={`p-2 flex items-center border border-dashed justify-center
+            className={`p-2 border border-dashed
             ${dragOver?.index === index && dragOver?.columnId === layout?.id ? "bg-green-100" : ""}
             ${selectedElement?.layout?.id == layout?.id && selectedElement?.index == index && 'border-blue-500 border border-solid'}
             `}
             style={{
-              backgroundColor: layout?.[index]?.outerStyle?.backgroundColor || 'bg-grey-100', // Apply background color here
+              display: 'flex', // Ensure flex display for alignment
+              justifyContent: layout?.[index]?.outerStyle?.justifyContent || 'center', // Apply horizontal alignment
+              alignItems: layout?.[index]?.outerStyle?.alignItems || 'center', // Apply vertical alignment
+              backgroundColor: layout?.[index]?.outerStyle?.backgroundColor || 'transparent', // Use transparent default
             }}
             onDragOver={(event) => onDragOverHandle(event, index)}
             onDragLeave={(event) => onDragLeaveHandle(event, index)}

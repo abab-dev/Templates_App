@@ -123,6 +123,15 @@ export default function Settings() {
           element?.outerStyle?.gap &&
           <InputStyleField label={"Gap"} value={element?.outerStyle?.gap}
             onHandleStyleChange={(value) => onHandleOuterStyleChange('gap', value)} />
+        }{
+          // Note: Using InputField for alignment. A Select/Dropdown component would be more user-friendly.
+          element?.outerStyle?.justifyContent &&
+          <InputField label={"Justify Content"} value={element?.outerStyle?.justifyContent}
+            onHandleInputChange={(value) => onHandleOuterStyleChange('justifyContent', value)} />
+        }{
+          element?.outerStyle?.alignItems &&
+          <InputField label={"Align Items"} value={element?.outerStyle?.alignItems}
+            onHandleInputChange={(value) => onHandleOuterStyleChange('alignItems', value)} />
         }
 
 

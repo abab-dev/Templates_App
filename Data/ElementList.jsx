@@ -22,11 +22,11 @@ export default [
 
     },
     outerStyle: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      display: 'flex', // Keep display flex
+      justifyContent: 'center', // Default horizontal alignment
+      alignItems: 'center', // Default vertical alignment
       width: '100%',
-      backgroundColor: '#ffffff' // Add default background color
+      backgroundColor: '#ffffff'
     }
   },
   {
@@ -44,6 +44,9 @@ export default [
       textTransform: 'uppercase'//lowercase , capitilized
     },
     outerStyle: {
+      display: 'flex', // Add display flex
+      justifyContent: 'center', // Default horizontal alignment
+      alignItems: 'center', // Default vertical alignment
       backgroundColor: '#fff',
       width: '100%'
     }
@@ -66,8 +69,8 @@ export default [
     outerStyle: {
       display: 'flex',
       width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'center', // Default horizontal alignment
+      alignItems: 'center', // Default vertical alignment
       backgroundColor: '#fff'
     }
   },
@@ -86,8 +89,8 @@ export default [
     },
     outerStyle: {
       display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'center', // Default horizontal alignment
+      alignItems: 'center', // Default vertical alignment
       backgroundColor: '#fff',
       width: '100%'
     }
@@ -107,8 +110,8 @@ export default [
     },
     outerStyle: {
       display: 'flex',
-      justifyContent: 'left',
-      alignItems: 'center',
+      justifyContent: 'flex-start', // Changed 'left' to 'flex-start'
+      alignItems: 'center', // Default vertical alignment
       backgroundColor: '#fff',
       width: '100%'
     }
