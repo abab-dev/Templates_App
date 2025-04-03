@@ -49,14 +49,10 @@ export default function ColumnLayout({ layout }) {
     setDragOver(null); // Reset highlight after drop
   };
 
-  const onDeleteElement = (event, index) => {
+  const onDeleteElement = (event) => {
     event.stopPropagation(); // Prevent triggering the setSelectedElement click
     setEmailTemplate((prevItems) =>
-      prevItems?.map((col) =>
-        col?.id === layout?.id
-          ? { ...col, [index]: null } // Set the element to null to delete it
-          : col
-      )
+      prevItems?.filter((col) => col?.id !== layout?.id)
     );
   };
 
@@ -109,7 +105,7 @@ export default function ColumnLayout({ layout }) {
       {selectedElement?.layout?.id == layout?.id && (
         <div className="absolute top-0 -right-10 flex gap-2  flex-col z-10">
           <button
-            onClick={(event) => onDeleteElement(event, index)}
+            onClick={onDeleteElement}
             className="p-1 bg-red-500 text-white rounded-full"
             style={{ zIndex: 10 }}
           >
