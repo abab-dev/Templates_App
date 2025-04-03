@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Button } from '../button'
 import { Code, Monitor, Smartphone } from 'lucide-react'
 import { useScreenSize } from '@/app/provider'
-function EditorHeader() {
+function EditorHeader({ viewHTMLCode }) {
   const { screenSize, setScreenSize } = useScreenSize()
   return (
     <div className='flex shadow-sm justify-between items-center'>
@@ -18,7 +18,9 @@ function EditorHeader() {
       <div className="flex gap-3 "><Button>save template</Button>
         <Button variant={'outline'}>send test email </Button>
 
-        <Button className="hover:text-primary hover:bg-purple-100" variant={'ghost'}><Code /></Button></div>
+        <Button className="hover:text-primary hover:bg-purple-100" variant={'ghost'}
+          onClick={() => viewHTMLCode(true)}
+        ><Code /></Button></div>
     </div>
   )
 }
