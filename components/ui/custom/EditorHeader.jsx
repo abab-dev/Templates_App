@@ -35,24 +35,31 @@ function EditorHeader({ viewHTMLCode }) {
     toast('Email template saved successfully');
   };
   return (
-    <div className='flex shadow-sm justify-between items-center'>
-      <Image src="/logo.png" alt='logo' width={50} height={80}></Image>
+    // Remove shadow, add bottom border for separation, adjust padding
+    <div className='flex border-b justify-between items-center p-4'>
+       {/* Slightly smaller logo */}
+      <Image src="/logo.png" alt='logo' width={40} height={64}></Image>
 
-      <div className="flex gap-3">
-        <Button variant="ghost" onClick={() => setScreenSize('desktop')} className={`${screenSize == 'desktop' && 'bg-purple-100 text-primary'}`}><Monitor />Desktop</Button>
-        <Button variant="ghost" onClick={() => setScreenSize('mobile')} className={`${screenSize == 'mobile' && 'bg-purple-100 text-primary'}`}><Smartphone />Mobile</Button>
+      <div className="flex gap-2">
+         {/* More subtle active state */}
+        <Button variant="ghost" onClick={() => setScreenSize('desktop')} className={` ${screenSize == 'desktop' ? 'bg-muted' : ''}`}><Monitor className="mr-2 h-4 w-4" />Desktop</Button>
+        <Button variant="ghost" onClick={() => setScreenSize('mobile')} className={` ${screenSize == 'mobile' ? 'bg-muted' : ''}`}><Smartphone className="mr-2 h-4 w-4" />Mobile</Button>
 
       </div >
-      <div className="flex gap-3 ">
+       {/* Adjust spacing and button variants */}
+      <div className="flex gap-2 items-center">
 
-        <Button className="hover:text-primary hover:bg-purple-100" variant={'ghost'}
+         {/* Use ghost variant, ensure consistent hover */}
+        <Button variant={'ghost'} size="icon"
           onClick={() => viewHTMLCode(true)}
-        ><Code /></Button>
+          aria-label="View Code"
+        ><Code className="h-4 w-4" /></Button>
         <Link href={'/dashboard'}>
-          <Button variant={"outline"} className={"mr-2"}>Dashboard</Button>
+           {/* Use ghost variant for less emphasis */}
+          <Button variant={"ghost"}>Dashboard</Button>
         </Link>
-        <Button className={"mr-2"}
-          onClick={onSaveTemplate}>save template</Button>
+         {/* Use default/primary variant for the main action */}
+        <Button size="sm" onClick={onSaveTemplate}>Save</Button>
       </div>
     </div>
   )

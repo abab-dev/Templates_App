@@ -124,7 +124,7 @@ export default function ColumnLayout({ layout }) {
           </button>
           <button
             onClick={moveLayoutDown}
-            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
+            className="p-1 bg-background border rounded-md hover:bg-muted disabled:opacity-50"
             disabled={index === emailTemplate?.length - 1}
           >
             <ArrowDown size={16} />

@@ -72,8 +72,10 @@ export default function Settings() {
     setSelectedElement(updatedData)
   }
   return (
-    <div className="p-5 flex flex-col gap-4">
-      <h2 className="font-bold text-xl">Settings</h2>
+     // Adjust padding, add border for separation
+    <div className="p-4 border-l flex flex-col gap-5 h-full overflow-y-auto">
+       {/* Slightly smaller, less bold heading */}
+      <h2 className="font-semibold text-lg border-b pb-2">Settings</h2>
       {
   element?.content != null &&
   <InputField
@@ -134,8 +136,10 @@ export default function Settings() {
         <InputStyleField label={"Margin"} value={element?.style?.margin}
           onHandleStyleChange={(value) => onHandleStyleChange('margin', value)} />
       }
-      <div>
-        <h2 className="font-bold mb-2">Outer Style</h2>
+       {/* Add spacing and border before Outer Style section */}
+      <div className="pt-4 border-t mt-2">
+         {/* Consistent heading style */}
+        <h3 className="font-semibold text-md mb-3">Container Style</h3>
         {
           element?.outerStyle?.backgroundColor &&
           <ColourPickerField label={"Background Color"} value={element?.outerStyle?.backgroundColor}

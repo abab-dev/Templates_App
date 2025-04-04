@@ -50,11 +50,13 @@ export default function Canvas({ viewHTMLCode, closeDialog }) {
   }
 
   return (
-    <div className="mt-20 flex justify-center">
+     // Add padding around the canvas area itself
+    <div className="py-10 px-4 flex justify-center bg-muted/40 min-h-screen">
       <div
-        className={`bg-white p-6 w-full transition-all duration-200 
+         // Use a subtle border for drag-over, adjust padding
+        className={`bg-white shadow-sm rounded-lg w-full transition-all duration-200 
           ${screenSize === 'desktop' ? 'max-w-2xl' : 'max-w-md'}
-          ${dragOver ? 'bg-purple-100 p-8' : 'p-6'}`
+          ${dragOver ? 'border-2 border-dashed border-primary' : 'border border-transparent'} p-4 md:p-6`
         }
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
@@ -66,9 +68,10 @@ export default function Canvas({ viewHTMLCode, closeDialog }) {
             <div key={index}>{getLayoutComponent(layout)}</div>
           ))
         ) : (
-          <p className="p-4 text-center bg-gray-100 border border-dashed">
-            Add Your Layout Here
-          </p>
+           {/* Minimal placeholder style */}
+          <div className="p-10 text-center border border-dashed border-border rounded-md text-muted-foreground">
+            <p>Drag and drop layouts or elements here</p>
+          </div>
         )}
       </div>
       <ViewCodeDialog openDialog={viewHTMLCode} htmlCode={htmlCode} closeDialog={closeDialog}></ViewCodeDialog>
