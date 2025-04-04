@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sparkles, Loader2 } from "lucide-react"; // Import Loader2
 import AIInputBox from '@/components/ui/custom/AIInputBox';
 import { Button } from "@/components/ui/button"; // Import Button
+import { Input } from "@/components/ui/input"; // Import Input
 import { useEmailTemplate } from "@/app/provider"; // Import context hook
 import { v4 as uuidv4 } from "uuid"; // Import uuid
 import { useMutation } from "convex/react"; // Import useMutation
@@ -29,7 +30,7 @@ export default function CreateNew() {
         tId: tId,
         design: JSON.stringify([]), // Start with an empty design array
         email: user?.primaryEmailAddress?.emailAddress || "",
-        description: "Started from scratch", // Add a default description
+        description: scratchDescription, // Use the description from state
       });
 
       // Clear the local state (optional, as editor will fetch based on tId)
@@ -62,10 +63,20 @@ export default function CreateNew() {
           </TabsContent>
           <TabsContent value="SCRATCH">
             <div className="flex flex-col items-center gap-4 mt-8">
-              <p className="text-center text-gray-500">
-                Start with a blank canvas and build your email template element by element.
+              <p className="text-center text-gray-500 mb-2">
+                Give your new template a name or description.
               </p>
-              <Button onClick={handleStartFromScratch} disabled={isLoadingScratch}>
+              <Input
+                type="text"
+                placeholder="e.g., Monthly Newsletter Template"
+                value={scratchDescription}
+                onChange={(e) => setScratchDescription(e.target.value)}
+                className="w-full mb-4" // Added margin-bottom
+              />
+              <Button
+                onClick={handleStartFromScratch}
+                disabled={isLoadingScratch || !scratchDescription.trim()} // Disable if loading or description is empty
+              >
                 {isLoadingScratch ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
