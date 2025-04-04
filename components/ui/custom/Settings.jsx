@@ -31,49 +31,68 @@ export default function Settings() {
     setElement(selectedElement?.layout?.[selectedElement?.index])
   }, [selectedElement])
   const onHandleInputChange = (fieldName, value) => {
-    const updatedData = { ...selectedElement }
-    updatedData.layout[selectedElement.index][fieldName] = value
-    setSelectedElement(updatedData)
-  }
+    setSelectedElement(prevSelectedElement => {
+      const updatedLayout = prevSelectedElement.layout.map((item, index) => {
+        if (index === selectedElement.index) {
+          return {
+            ...item,
+            [fieldName]: value,
+          };
+        }
+        return item;
+      });
+
+      return {
+        ...prevSelectedElement,
+        layout: updatedLayout,
+      };
+    });
+  };
+
   const onHandleStyleChange = (fieldName, fieldValue) => {
-    const updatedData = {
-      ...selectedElement,
-      layout: {
-        ...selectedElement.layout,
-        [selectedElement.index]: {
-          ...selectedElement.layout[selectedElement.index],
-          style: {
-            ...selectedElement?.layout[selectedElement.index]?.style,
-            [fieldName]: fieldValue
-
-          }
+    setSelectedElement(prevSelectedElement => {
+      const updatedLayout = prevSelectedElement.layout.map((item, index) => {
+        if (index === selectedElement.index) {
+          return {
+            ...item,
+            style: {
+              ...item.style,
+              [fieldName]: fieldValue,
+            },
+          };
         }
-      }
+        return item;
+      });
 
-    }
-    setSelectedElement(updatedData)
-  }
+      return {
+        ...prevSelectedElement,
+        layout: updatedLayout,
+      };
+    });
+  };
   const onHandleOuterStyleChange = (fieldName, fieldValue) => {
-    const updatedData = {
-      ...selectedElement,
-      layout: {
-        ...selectedElement.layout,
-        [selectedElement.index]: {
-          ...selectedElement.layout[selectedElement.index],
-          outerStyle: {
-            ...selectedElement?.layout[selectedElement.index]?.outerStyle,
-            [fieldName]: fieldValue
-
-          }
+    setSelectedElement(prevSelectedElement => {
+      const updatedLayout = prevSelectedElement.layout.map((item, index) => {
+        if (index === selectedElement.index) {
+          return {
+            ...item,
+            outerStyle: {
+              ...item.outerStyle,
+              [fieldName]: fieldValue,
+            },
+          };
         }
-      }
+        return item;
+      });
 
-    }
-    console.log(selectedElement?.layout[selectedElement.index]?.outerStyle)
-    setSelectedElement(updatedData)
-  }
+      return {
+        ...prevSelectedElement,
+        layout: updatedLayout,
+      };
+    });
+  };
   return (
- <div className="p-5 flex flex-col gap-4">
+    <div className="p-5 flex flex-col gap-4">
       <h2 className="font-bold text-xl">Settings</h2>
       {element?.content != null && (
         <InputField
