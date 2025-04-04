@@ -6,7 +6,9 @@ import ColourPickerField from "./Settings/ColourPickerField";
 import InputStyleField from "./Settings/InputStyleField";
 import SliderField from "./Settings/SliderField";
 import TextAreaField from "./Settings/TextAreaField";
-import SelectField from "./Settings/SelectField"; // Import the new component
+import SelectField from "./Settings/SelectField";
+import CaseSwitchingField from "./Settings/CaseSwitchingField";
+ // Import the new component
 
 // Define options for the select fields
 const justifyContentOptions = [
@@ -168,6 +170,13 @@ export default function Settings() {
           label="Margin"
           value={element.style.margin}
           onHandleStyleChange={(value) => onHandleStyleChange("margin", value)}
+        />
+      )}
+       {element?.style?.textTransform != null && (
+        <CaseSwitchingField
+          label="Uppercase"
+          value={element.style.textTransform}
+          onHandleStyleChange={(value) => onHandleStyleChange("textTransform", value)}
         />
       )}
       <div>
