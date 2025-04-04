@@ -19,8 +19,14 @@ export default function CreateNew() {
   const { user } = useUser(); // Get user data
   const saveTemplate = useMutation(api.emailTemplate.saveTemplate); // Initialize mutation
   const [isLoadingScratch, setIsLoadingScratch] = useState(false); // Loading state for scratch button
+  const [scratchDescription, setScratchDescription] = useState(""); // State for scratch description
 
   const handleStartFromScratch = async () => {
+    if (!scratchDescription.trim()) {
+      // Optionally, add validation feedback here (e.g., toast notification)
+      console.error("Description cannot be empty");
+      return; // Prevent submission if description is empty
+    }
     setIsLoadingScratch(true);
     const tId = uuidv4(); // Generate unique ID
 
