@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const saveTemplate = mutation({
@@ -18,3 +18,22 @@ export const saveTemplate = mutation({
     } catch (e) {}
   },
 });
+
+export const GetTemplateDesign =query({
+  args:{
+    email:v.string(),
+    tId:v.string()
+  },
+  handler:async(ctx,args)=>{
+  try{
+    const result = await ctx.db.query('emailTemplates')
+    .filter((q)=> q.and(q.eq(q.field(tId),args.tId)),
+    q.eq(q.field('email'),args.email))
+    .collect()
+
+    return result[0]
+  }
+}catch(e){
+ return {} 
+}
+})

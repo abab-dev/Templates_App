@@ -7,7 +7,13 @@ export default defineSchema({
     picture: v.string(),
     credits: v.number(),
     clerkId: v.string(), // Add Clerk User ID field
-  }).index("by_clerk_id", ["clerkId"]) // Add index for efficient lookup by Clerk ID
+  }).index("by_clerk_id", ["clerkId"]), // Add index for efficient lookup by Clerk ID
+  emailTemplates:defineTable({
+    tId:v.string(),
+    design:v.any(),
+    email:v.string(),
+
+  })
 
 })
 
