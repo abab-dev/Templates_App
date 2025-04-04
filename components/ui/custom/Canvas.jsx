@@ -22,18 +22,19 @@ export default function Canvas({ viewHTMLCode, closeDialog }) {
   }
 
   const onDropHandle = () => {
-    setDragOver(false)
+    setDragOver(false);
     if (dragElementLayout) {
-      console.log(dragElementLayout?.dragLayout) // Log the dropped object
-      setEmailTemplate(prev => [...prev, dragElementLayout?.dragLayout])
+      console.log("Dropped layout:", dragElementLayout?.dragLayout);
+      setEmailTemplate(prev => [...prev, dragElementLayout?.dragLayout]);
     }
-  }
+  };
 
   const getLayoutComponent = (layout) => {
     if (layout?.type === 'column') {
-      return <ColumnLayout layout={layout} />
+      return <ColumnLayout layout={layout} key={layout.id} />;
     }
-  }
+    return null;
+  };
   useEffect(() => {
     if (viewHTMLCode) {
       getHTMLCode()
