@@ -10,7 +10,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function AIInputBox() {
   const [userInput, setUserInput] = useState();
@@ -38,7 +38,7 @@ export default function AIInputBox() {
         email: user?.primaryEmailAddress?.emailAddress || "",
         description: userInput,
       });
-      router.push('/editor'+tId)
+      router.push('/editor/'+tId)
       setIsLoading(false);
     } catch (e) {
       console.log(e);
