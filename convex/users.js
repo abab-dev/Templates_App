@@ -27,7 +27,7 @@ export const upsertFromClerk = internalMutation({
     const user = await userByClerkId(ctx, data.id);
     if (user === null) {
       // Initialize credits for new users
-      await ctx.db.insert("users", { ...userAttributes, credits: 0 });
+      await ctx.db.insert("users", { ...userAttributes, credits: 3 });
     } else {
       // Only patch attributes, don't overwrite credits unless intended
       await ctx.db.patch(user._id, userAttributes);
