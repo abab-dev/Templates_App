@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../button";
 import Link from "next/link";
-import { useQuery } from "convex/react";
+import { useConvex } from "convex/react"; // Import useConvex
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -15,39 +15,40 @@ import {
 import { Loader2 } from "lucide-react"; // Import Loader icon
 
 function TemplateList() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
+  const convex = useConvex(); // Get Convex client
   const [emailList, setEmailList] = useState([]);
-  const templates = useQuery(
-    api.emailTemplate.GetAllTemplatesForEmail,
-    user?.primaryEmailAddress?.emailAddress
-      ? { email: user.primaryEmailAddress.emailAddress }
-      : "skip" // Skip query if email is not available
-  );
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Function to fetch templates
+  const fetchTemplates = async (userEmail) => {
+    setIsLoading(true);
+    try {
+      const result = await convex.query(api.emailTemplate.GetAllTemplatesForEmail, {
+        email: userEmail,
+      });
+      setEmailList(result || []); // Ensure it's an array
+    } catch (error) {
+      console.error("Error fetching templates:", error);
+      setEmailList([]); // Set empty list on error
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // templates can be undefined during initial load or if skipped
-    if (templates !== undefined) {
-      setEmailList(templates || []); // Ensure emailList is an array even if templates is null/empty
-      setIsLoading(false); // Set loading to false when data is fetched or if query is skipped
-    }
-  }, [templates]);
-
-  // Handle the case where the query is skipped (user email not available yet)
-  useEffect(() => {
-    if (templates === undefined && user?.primaryEmailAddress?.emailAddress === undefined && user?.isLoaded) {
-      // Still waiting for user info, keep loading
-      setIsLoading(true);
-    } else if (templates === undefined && user?.primaryEmailAddress?.emailAddress === null && user?.isLoaded) {
-       // User info loaded, but no email (shouldn't happen with Clerk usually, but handle defensively)
-       setIsLoading(false);
-       setEmailList([]);
-    } else if (!user?.isLoaded) {
-      // Clerk user is not loaded yet
+    // Only fetch if Clerk is loaded and user email is available
+    if (isLoaded && user?.primaryEmailAddress?.emailAddress) {
+      fetchTemplates(user.primaryEmailAddress.emailAddress);
+    } else if (isLoaded && !user?.primaryEmailAddress?.emailAddress) {
+      // Handle case where user is loaded but has no primary email (edge case)
+      setIsLoading(false);
+      setEmailList([]);
+    } else {
+      // Clerk is not loaded yet, keep showing loading
       setIsLoading(true);
     }
-  }, [templates, user]);
-
+  }, [user, isLoaded, convex]); // Rerun effect when user, isLoaded, or convex changes
 
   return (
     <div>
