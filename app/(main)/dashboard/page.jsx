@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import EmailTemplateList from "@/components/ui/custom/EmailTemplateList";
+import TemplateList from "@/components/ui/custom/EmailTemplateList";
 import { Loader2 } from "lucide-react"; // Import Loader icon
 
 function Dashboard() {
@@ -35,7 +35,7 @@ function Dashboard() {
             <Button>Create New Email Template</Button>
           </Link>
         </div>
-        <EmailTemplateList /> {/* Pass user email if needed, but handled internally now */}
+        <TemplateList /> {/* Pass user email if needed, but handled internally now */}
       </div>
     </div>
   );
