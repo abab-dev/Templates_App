@@ -54,7 +54,7 @@ export default function AIInputBox() {
         disabled={(userInput?.length == 0 || isLoading)}
         
         onClick={onGenerate}
-        >{loading ? <span><Loader2 className="animate-spin"></Loader2>Please wait...</span>:'Generate'}</Button>
+        >{isLoading ? <span><Loader2 className="animate-spin"></Loader2>Please wait...</span>:'Generate'}</Button>
     </div>
   )
 
