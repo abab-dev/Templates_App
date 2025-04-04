@@ -7,6 +7,7 @@ import { useEmailTemplate, useScreenSize } from '@/app/provider'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { useParams } from 'next/navigation'
+import { toast } from 'sonner'
 function EditorHeader({ viewHTMLCode }) {
   const { screenSize, setScreenSize } = useScreenSize()
   const {templateId} = useParams()
@@ -17,6 +18,7 @@ function EditorHeader({ viewHTMLCode }) {
       tId: templateId,
       design: JSON.stringify(emailTemplate),
     });
+    toast('Email template saved successfully')
   };
   return (
     <div className='flex shadow-sm justify-between items-center'>
