@@ -5,6 +5,7 @@ import { ScreenSizeContext } from "@/context/ScreenSizeContext";
 import { useContext, useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs"; // Clerk auth hook
 import { SelectedElementContext } from "@/context/SelectedElementContext"
+import { jsonToConvex } from "convex/values";
 function Provider({ children }) {
   const { isSignedIn } = useUser(); // Check if user is authenticated
 
@@ -12,16 +13,14 @@ function Provider({ children }) {
   const [screenSize, setScreenSize] = useState("desktop");
   const [emailTemplate, setEmailTemplate] = useState([]);
   const [selectedElement, setSelectedElement] = useState()
-
-  useEffect(() => {
-        if (typeof window !== "undefined" && isSignedIn) {                                                                                                     │
-          const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? {})                                                                       │
-          if (storedTemplate) {
-            setEmailTemplate(JSON.parse(storedTemplate));
-          }
-        }
-      }, [isSignedIn]);
-
+  useEffect(()=>{
+    if (typeof window !== undefined && isSignedIn){
+      const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? "[]")
+      if (storedTemplate){
+        setEmailTemplate(storedTemplate)
+      }
+    }
+  },[isSignedIn])
   useEffect(() => {
     if (typeof window !== "undefined" && isSignedIn) {
       localStorage.setItem("emailTemplate", JSON.stringify(emailTemplate));
@@ -30,16 +29,20 @@ function Provider({ children }) {
 
   useEffect(() => {
     if (selectedElement) {
-      const updatedEmailTemplates = emailTemplate.map((item) => {
-        if (item?.id === selectedElement?.layout?.id) {
-          return selectedElement?.layout;
-        } else {
-          return item;
+      const updatedEmailTemplates = []
+      emailTemplate.forEach((item, index) => {
+        if (item?.id == selectedElement?.layout?.id) {
+          updatedEmailTemplates?.push(selectedElement?.layout)
+
         }
-      });
-      setEmailTemplate(updatedEmailTemplates);
+        else {
+          updatedEmailTemplates.push(item)
+        }
+      })
+      setEmailTemplate(updatedEmailTemplates)
     }
-  }, [selectedElement, emailTemplate]);
+
+  }, [selectedElement])
 
   return (
     <ScreenSizeContext.Provider value={{ screenSize, setScreenSize }}>

@@ -48,7 +48,7 @@ function TemplateList() {
       // Clerk is not loaded yet, keep showing loading
       setIsLoading(true);
     }
-  }, [user, isLoaded, convex]); // Rerun effect when user, isLoaded, or convex changes
+  }, [user, isLoaded ]); // Rerun effect when user, isLoaded, or convex changes
 
   return (
     <div>
