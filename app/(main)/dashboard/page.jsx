@@ -10,7 +10,12 @@ function Dashboard() {
   const { isLoaded, user } = useUser();
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    // Optional: Add a more visually appealing loading state
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="animate-spin text-primary" size={48} />
+      </div>
+    );
   }
 
   return (
