@@ -16,8 +16,6 @@ function Provider({ children }) {
   // Load emailTemplate from localStorage on initial mount (if authenticated)
   useEffect(() => {
     if (typeof window !== "undefined" && isSignedIn) {
-      try {
-    if (typeof window !== "undefined" && isSignedIn) {
       const storedTemplateString = localStorage.getItem("emailTemplate");
       if (storedTemplateString) {
         try {
