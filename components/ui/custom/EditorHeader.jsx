@@ -16,13 +16,19 @@ function EditorHeader({ viewHTMLCode }) {
   const onSaveTemplate = async () => {
     // Extract the necessary data from the emailTemplate
     const designData = emailTemplate.map(layout => {
-      // Ensure that you are only passing serializable data
-      return {
-        id: layout.id,
-        type: layout.type,
-        // Add other necessary properties
-      };
-    });
+      // Ensure that layout is defined and has the necessary properties
+      if (layout && layout.id && layout.type) {
+        return {
+          id: layout.id,
+          type: layout.type,
+          // Add other necessary properties
+        };
+      } else {
+        // Handle the case where layout or its properties are undefined
+        console.warn("Skipping layout due to undefined properties:", layout);
+        return null; // Or return a default object, or handle it as needed
+      }
+    }).filter(item => item !== null); // Filter out null values
 
     await updateEmailTemplate({
       tId: templateId,
