@@ -14,12 +14,21 @@ function EditorHeader({ viewHTMLCode }) {
   const updateEmailTemplate = useMutation(api.emailTemplate.UpdateTemplateDesign)
   const {emailTemplate,setEmailTemplate} = useEmailTemplate()
   const onSaveTemplate = async () => {
-    // Pass the emailTemplate object directly
+    // Extract the necessary data from the emailTemplate
+    const designData = emailTemplate.map(layout => {
+      // Ensure that you are only passing serializable data
+      return {
+        id: layout.id,
+        type: layout.type,
+        // Add other necessary properties
+      };
+    });
+
     await updateEmailTemplate({
       tId: templateId,
-      design: emailTemplate,
+      design: designData, // Pass the serializable data
     });
-    toast('Email template saved successfully')
+    toast('Email template saved successfully');
   };
   return (
     <div className='flex shadow-sm justify-between items-center'>
