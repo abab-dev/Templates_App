@@ -39,10 +39,10 @@ function Editor() {
   };
 
   useEffect(() => {
-    if (user && templateId) {
+    if (user ) {
       getTemplateData();
     }
-  }, [user, templateId]);
+  }, [user ]);
 
   if (isLoading) {
     return (
