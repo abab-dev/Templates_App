@@ -38,7 +38,7 @@ export default function AIInputBox() {
         email: user?.primaryEmailAddress?.emailAddress || "",
         description: userInput,
       });
-      router.push('/editor/'+tId)
+      router.push('/editor' + tId)
       setIsLoading(false);
     } catch (e) {
       console.log(e);
@@ -52,9 +52,9 @@ export default function AIInputBox() {
       <Textarea onChange={(e) => setUserInput(e.target.value)} placeholder="Start writing here" rows="5" className={"text-xl my-5"}></Textarea>
       <Button
         disabled={(userInput?.length == 0 || isLoading)}
-        
+
         onClick={onGenerate}
-        >{isLoading ? <span><Loader2 className="animate-spin"></Loader2>Please wait...</span>:'Generate'}</Button>
+      >{isLoading ? <span><Loader2 className="animate-spin"></Loader2>Please wait...</span> : 'Generate'}</Button>
     </div>
   )
 
