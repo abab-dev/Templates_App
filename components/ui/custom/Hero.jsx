@@ -3,9 +3,12 @@ import Image from 'next/image'
 import React from 'react'
 function Hero() {
   return (
-    <div className='px-10 md:px-28 lg:px-44 xl:px-56 flex flex-col items-center mt-24'>
-      <h2 className='text-extrabold text-5xl'>AI Powered <span className='text-primary'>Email Templates</span></h2>
-      <p className='text-center mt-4'>Your super amazing application description
+    // Increased vertical padding (mt), adjusted horizontal padding for different screens
+    <div className='px-6 md:px-20 lg:px-32 xl:px-48 flex flex-col items-center mt-28 md:mt-32'>
+       {/* Slightly smaller, less bold heading, increased bottom margin */}
+      <h2 className='text-bold text-4xl md:text-5xl text-center mb-6'>AI Powered <span className='text-primary'>Email Templates</span></h2>
+       {/* Use a slightly lighter text color for description, increased max-width */}
+      <p className='text-center text-muted-foreground mt-4 max-w-xl md:max-w-2xl'>Your super amazing application description
         Your super amazing application description
         Your super amazing application description
         Your super amazing application description
@@ -13,14 +16,19 @@ function Hero() {
         Your super amazing application description
         Your super amazing application description
       </p>
-      <div className='flex gap-5 mt-6'>
-        <Button variant={'outline'} > Try Demo</Button>
-        <Button>Get Started</Button>
+       {/* Increased margin top for buttons */}
+      <div className='flex gap-4 mt-8'>
+         {/* Subtle button hints - final style depends on button.jsx */}
+        <Button variant={'outline'} size="lg"> Try Demo</Button>
+        <Button size="lg">Get Started</Button>
       </div>
+       {/* Increased margin top for image, maybe add subtle rounded corners */}
       <Image src="/vercel.svg"
         width={1000}
         height={1000}
-        alt="hero-image">
+        alt="hero-image"
+        className="mt-16 md:mt-20 rounded-lg" // Added subtle rounding
+        >
 
       </Image>
     </div>

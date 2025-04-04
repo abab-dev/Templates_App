@@ -5,19 +5,23 @@ import { Button } from '../button'
 import { SignedOut, SignInButton, SignedIn, UserButton } from '@clerk/nextjs'
 function Header({isDashboard = true}) {
   return (
-    // Removed shadow-sm and added padding for spacing
-    <div className='flex justify-between items-center p-4'>
-      <Image src="/logo.png" alt='logo' width={50} height={80}></Image>
+    // Minimalist header: Clean padding, no explicit background/border unless needed for contrast later
+    <div className='flex justify-between items-center p-4 md:p-6'>
+      {/* Consider slightly smaller logo for minimalism if appropriate */}
+      <Image src="/logo.png" alt='logo' width={40} height={64}></Image>
 
       <div className='flex gap-3 items-center'>
         <SignedOut>
           <SignInButton mode="modal">
-            <Button>Get Started</Button></SignInButton>
+             {/* Subtle button hint - final style depends on button.jsx */}
+            <Button variant="ghost">Get Started</Button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           { isDashboard &&
           <Link href={'/dashboard'}>
-            < Button > Dashboard</Button>
+             {/* Subtle button hint - final style depends on button.jsx */}
+            < Button variant="ghost"> Dashboard</Button>
           </Link>
 }
           < UserButton />
