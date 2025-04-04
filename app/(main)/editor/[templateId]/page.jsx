@@ -8,11 +8,13 @@ import { useParams } from "next/navigation";
 import { GetTemplateDesign } from "@/convex/emailTemplate";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
+import { useEmailTemplate } from "@/app/provider";
 function Editor() {
 
   const [viewHTMLCode, setViewHTMLCode] = useState()
   const {templateId} = useParams()
   const {user} = useUser()
+  const {emailTemplate,setEmailTemplate} = useEmailTemplate
   const convex = useConvex()
   const getTemplateData = async ()=>{
     const result = await convex.query(api.emailTemplate.getTemplateData,{
