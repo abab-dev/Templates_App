@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Button } from '../button'
 import { SignedOut, SignInButton, SignedIn, UserButton } from '@clerk/nextjs'
-function Header() {
+function Header({isDashboard = true}) {
   return (
     // Removed shadow-sm and added padding for spacing
     <div className='flex justify-between items-center p-4'>
@@ -15,9 +15,11 @@ function Header() {
             <Button>Get Started</Button></SignInButton>
         </SignedOut>
         <SignedIn>
+          { isDashboard &&
           <Link href={'/dashboard'}>
             < Button > Dashboard</Button>
           </Link>
+}
           < UserButton />
         </SignedIn>
       </div >
