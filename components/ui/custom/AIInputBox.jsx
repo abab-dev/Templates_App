@@ -8,11 +8,13 @@ import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
 
 export default function AIInputBox() {
   const [userInput, setUserInput] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const saveTemplate = useMutation(api.emailTemplate.saveTemplate);
+  const { user } = useUser();
 
   const onGenerate = async () => {
     const PROMPT = Prompt.EMAIL_PROMPT + "\n-" + userInput;
@@ -30,7 +32,7 @@ export default function AIInputBox() {
       await saveTemplate({
         tId: tId,
         design: result.data.data,
-        email: "", // You might want to get the user's email here
+        email: user?.primaryEmailAddress?.emailAddress || "",
       });
       setIsLoading(false);
     } catch (e) {
