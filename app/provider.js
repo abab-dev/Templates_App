@@ -16,33 +16,30 @@ function Provider({ children }) {
   useEffect(() => {
         if (typeof window !== "undefined" && isSignedIn) {                                                                                                     │
           const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? {})                                                                       │
-          if (storedTemplate) {                                                                                                                                │
-            setEmailTemplate(JSON.parse(storedTemplate));                                                                                                      │
-            setEmailTemplate((storedTemplate));                                                                                                                │
-          }                                                                                                                                                    │
-        }                                                                                                                                                      │
-      }, [isSignedIn]); // Run only when authentication state changes                                                                                          │
+          if (storedTemplate) {
+            setEmailTemplate(JSON.parse(storedTemplate));
+          }
+        }
+      }, [isSignedIn]);
+
   useEffect(() => {
     if (typeof window !== "undefined" && isSignedIn) {
       localStorage.setItem("emailTemplate", JSON.stringify(emailTemplate));
     }
   }, [emailTemplate, isSignedIn]);
+
   useEffect(() => {
     if (selectedElement) {
-      let updatedEmailTemplates = []
-      emailTemplate.forEach((item, index) => {
-        if (item?.id == selectedElement?.layout?.id) {
-          updatedEmailTemplates?.push(selectedElement?.layout)
-
+      const updatedEmailTemplates = emailTemplate.map((item) => {
+        if (item?.id === selectedElement?.layout?.id) {
+          return selectedElement?.layout;
+        } else {
+          return item;
         }
-        else {
-          updatedEmailTemplates.push(item)
-        }
-      })
-      setEmailTemplate(updatedEmailTemplates)
+      });
+      setEmailTemplate(updatedEmailTemplates);
     }
-
-  }, [selectedElement])
+  }, [selectedElement, emailTemplate]);
 
   return (
     <ScreenSizeContext.Provider value={{ screenSize, setScreenSize }}>
