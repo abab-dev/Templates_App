@@ -27,8 +27,7 @@ function Editor() {
         tId: templateId,
         email: user?.primaryEmailAddress?.emailAddress,
       });
-      console.log("Fetched template data:", result);
-      // Parse the design if it's a string
+
       const design = typeof result?.design === 'string' ? JSON.parse(result.design) : result?.design;
       setEmailTemplate(design || []); // Set the design, fallback to empty array
     } catch (error) {
