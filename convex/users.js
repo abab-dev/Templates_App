@@ -1,12 +1,6 @@
 import { internalMutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-export const current = query({
-  args: {},
-  handler: async (ctx) => {
-    return await getCurrentUser(ctx);
-  },
-});
 
 export const upsertFromClerk = internalMutation({
   args: { data: v.any() }, // no runtime validation, trust Clerk
