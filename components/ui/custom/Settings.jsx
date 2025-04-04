@@ -82,11 +82,25 @@ export default function Settings() {
           onHandleInputChange={(value) => onHandleInputChange("content", value)}
         />
       )}
+      {element?.content != null && (
+        <CaseSwitchingField
+          label="Content Uppercase"
+          value={element.style.textTransform}
+          onHandleInputChange={(value) => onHandleInputChange("content", element?.content?.toUpperCase())}
+        />
+      )}
       {element?.textarea != null && (
         <TextAreaField
           label="TextArea"
           value={element.textarea}
           onHandleInputChange={(value) => onHandleInputChange("textarea", value)}
+        />
+      )}
+      {element?.textarea != null && (
+        <CaseSwitchingField
+          label="TextArea Uppercase"
+          value={element.style.textTransform}
+          onHandleInputChange={(value) => onHandleInputChange("textarea", element?.textarea?.toUpperCase())}
         />
       )}
       {element?.imageUrl != null && (

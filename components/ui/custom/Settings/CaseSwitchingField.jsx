@@ -1,9 +1,9 @@
 import React from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-export default function CaseSwitchingField({ label, value, onHandleStyleChange }) {
+export default function CaseSwitchingField({ label, value, onHandleInputChange }) {
   const handleChange = (newValue) => {
-    onHandleStyleChange(newValue === 'uppercase' ? 'uppercase' : 'normal');
+    onHandleInputChange(newValue === 'uppercase' ? 'uppercase' : 'normal');
   };
 
   return (
