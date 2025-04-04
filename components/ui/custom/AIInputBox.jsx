@@ -16,14 +16,12 @@ export default function AIInputBox() {
       const result = await axios.post('/api/ai-email-generate',{
         prompt:PROMPT,
         userEmail:'',
-        tId:0 
+        tId:0
+      })
 
-      }
-  )
-
-      console.log(result)
+      console.log(result.data.data)
       setIsLoading(false)
-    }catch(e){
+    } catch(e){
       console.log(e)
       setIsLoading(false)
     }

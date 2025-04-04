@@ -7,6 +7,7 @@ export async function POST(req) {
     const result = await GenerateEmailTemplate.sendMessage(prompt)
     const AIResponse = result.response.text()
     console.log(AIResponse)
+    return NextResponse.json({ data: AIResponse })
   } catch (e) {
     return NextResponse.json({ error: e })
   }
