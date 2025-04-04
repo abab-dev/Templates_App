@@ -1,9 +1,9 @@
 import React from "react";
-import { Switch } from "@/components/ui/switch";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export default function CaseSwitchingField({ label, value, onHandleStyleChange }) {
-  const handleChange = (e) => {
-    onHandleStyleChange(e.target.checked ? 'uppercase' : 'normal');
+  const handleChange = (newValue) => {
+    onHandleStyleChange(newValue === 'uppercase' ? 'uppercase' : 'normal');
   };
 
   return (
@@ -11,11 +11,14 @@ export default function CaseSwitchingField({ label, value, onHandleStyleChange }
       <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
         {label}
       </label>
-      <Switch
-        id="case-switch"
-        checked={value === 'uppercase'}
-        onCheckedChange={handleChange}
-      />
+      <ToggleGroup type="single" value={value === 'uppercase' ? 'uppercase' : 'normal'} onValueChange={handleChange}>
+        <ToggleGroupItem value="normal" aria-label="Normal Case">
+          Normal
+        </ToggleGroupItem>
+        <ToggleGroupItem value="uppercase" aria-label="Uppercase">
+          Uppercase
+        </ToggleGroupItem>
+      </ToggleGroup>
     </div>
   );
 }
