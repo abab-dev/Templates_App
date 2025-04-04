@@ -30,6 +30,7 @@ export default function Settings() {
   }, [selectedElement])
   const onHandleInputChange = (fieldName, value) => {
     const updatedData = { ...selectedElement }
+    console.log(updatedData.layout[selectedElement.index][fieldName]) 
     updatedData.layout[selectedElement.index][fieldName] = value
     setSelectedElement(updatedData)
   }
@@ -86,7 +87,7 @@ export default function Settings() {
         <TextAreaField label={'TextArea'} value={element?.textarea}
           onHandleInputChange={(value) => onHandleInputChange("textarea", value)}></TextAreaField>
       }{
-        element?.imageUrl &&
+        element?.imageUrl != null &&
         <InputField label={'Image URL'} value={element?.imageUrl}
           onHandleInputChange={(value) => onHandleInputChange("imageUrl", value)}></InputField>
       }{
@@ -100,7 +101,7 @@ export default function Settings() {
           onHandleStyleChange={(value) => onHandleStyleChange('fontSize', value)} />
       }
       {
-        element?.url &&
+        element?.url != null  &&
         <InputField label={'url'} value={element?.url}
           onHandleInputChange={(value) => onHandleInputChange("url", value)}></InputField>
       }

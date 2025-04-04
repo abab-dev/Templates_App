@@ -12,16 +12,16 @@ function Provider({ children }) {
 
   const [dragElementLayout, setDragElementLayout] = useState();
   const [screenSize, setScreenSize] = useState("desktop");
-  const [emailTemplate, setEmailTemplate] = useState([]);
+  const [emailTemplate, setEmailTemplate] = useState('[]');
   const [selectedElement, setSelectedElement] = useState()
-  useEffect(()=>{
-    if (typeof window !== undefined && isSignedIn){
+  useEffect(() => {
+    if (typeof window !== undefined && isSignedIn) {
       const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? "[]")
-      if (storedTemplate){
+      if (storedTemplate) {
         setEmailTemplate(storedTemplate)
       }
     }
-  },[isSignedIn])
+  }, [isSignedIn])
   useEffect(() => {
     if (typeof window !== "undefined" && isSignedIn) {
       localStorage.setItem("emailTemplate", JSON.stringify(emailTemplate));
@@ -46,16 +46,16 @@ function Provider({ children }) {
   }, [selectedElement])
 
   return (
-          <ConvexClientProvider>
-    <ScreenSizeContext.Provider value={{ screenSize, setScreenSize }}>
-      <DragDropLayoutElement.Provider value={{ dragElementLayout, setDragElementLayout }}>
-        <EmailTemplateContext.Provider value={{ emailTemplate, setEmailTemplate }}>
-          <SelectedElementContext.Provider value={{ selectedElement, setSelectedElement }}>
-            {children}
-          </SelectedElementContext.Provider>
-        </EmailTemplateContext.Provider>
-      </DragDropLayoutElement.Provider>
-    </ScreenSizeContext.Provider>
+    <ConvexClientProvider>
+      <ScreenSizeContext.Provider value={{ screenSize, setScreenSize }}>
+        <DragDropLayoutElement.Provider value={{ dragElementLayout, setDragElementLayout }}>
+          <EmailTemplateContext.Provider value={{ emailTemplate, setEmailTemplate }}>
+            <SelectedElementContext.Provider value={{ selectedElement, setSelectedElement }}>
+              {children}
+            </SelectedElementContext.Provider>
+          </EmailTemplateContext.Provider>
+        </DragDropLayoutElement.Provider>
+      </ScreenSizeContext.Provider>
     </ConvexClientProvider>
   );
 }
