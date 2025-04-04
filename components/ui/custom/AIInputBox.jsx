@@ -6,7 +6,7 @@ import { Textarea } from "../textarea";
 import { Button } from "../button";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
