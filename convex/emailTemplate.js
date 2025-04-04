@@ -19,21 +19,26 @@ export const saveTemplate = mutation({
   },
 });
 
-export const GetTemplateDesign =query({
-  args:{
-    email:v.string(),
-    tId:v.string()
+export const GetTemplateDesign = query({
+  args: {
+    email: v.string(),
+    tId: v.string(),
   },
-  handler:async(ctx,args)=>{
-  try{
-    const result = await ctx.db.query('emailTemplates')
-    .filter((q)=> q.and(q.eq(q.field(tId),args.tId)),
-    q.eq(q.field('email'),args.email))
-    .collect()
+  handler: async (ctx, args) => {
+    try {
+      const result = await ctx.db
+        .query("emailTemplates")
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("tId"), args.tId),
+            q.eq(q.field("email"), args.email)
+          )
+        )
+        .collect();
 
-    return result[0]
-  }
-}catch(e){
- return {} 
-}
-})
+      return result[0];
+    } catch (e) {
+      return {};
+    }
+  },
+});
