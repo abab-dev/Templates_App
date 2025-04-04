@@ -14,11 +14,12 @@ function EditorHeader({ viewHTMLCode }) {
   const updateEmailTemplate = useMutation(api.emailTemplate.UpdateTemplateDesign)
   const {emailTemplate,setEmailTemplate} = useEmailTemplate()
   const onSaveTemplate = async () => {
-    // Extract the necessary data from the emailTemplate
     const designData = emailTemplate.map(layout => {
       // Ensure that layout is defined and has the necessary properties
       if (layout && layout.id && layout.type) {
-        return layout;
+        // Deeply serialize the layout object
+        const serializedLayout = JSON.parse(JSON.stringify(layout));
+        return serializedLayout;
       } else {
         // Handle the case where layout or its properties are undefined
         console.warn("Skipping layout due to undefined properties:", layout);
