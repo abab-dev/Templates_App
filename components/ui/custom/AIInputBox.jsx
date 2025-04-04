@@ -18,8 +18,13 @@ export default function AIInputBox() {
   const saveTemplate = useMutation(api.emailTemplate.saveTemplate);
   const router = useRouter()
   const { user } = useUser();
+  const hasUserCredits = useQuery(api.users.hasCredits, { clerkId: user?.id || "empty" });
 
   const onGenerate = async () => {
+    if (!hasUserCredits) {
+      alert("Insufficient credits. Please add credits to your account.");
+      return;
+    }
     const PROMPT = Prompt.EMAIL_PROMPT + "\n-" + userInput;
     const tId = uuidv4();
 
