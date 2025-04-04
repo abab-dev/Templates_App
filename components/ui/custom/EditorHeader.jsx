@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '../button'
 import { Code, Monitor, Smartphone } from 'lucide-react'
 import { useEmailTemplate, useScreenSize } from '@/app/provider'
