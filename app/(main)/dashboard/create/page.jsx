@@ -18,8 +18,8 @@ export default function CreateNew() {
     router.push('/dashboard/editor'); // Assuming '/dashboard/editor' is the route
   };
   return (
-    // Updated gradient for more vibrancy
-    <div className="p-10 md:px-28 lg:px-72 mt-20 xl:px-64 min-h-screen bg-gradient-to-br from-purple-200 via-pink-200 to-red-100">
+    // Removed gradient classes, layout now handles it. Kept padding/margin.
+    <div className="p-10 md:px-28 lg:px-72 mt-20 xl:px-64">
       <div className="flex flex-col items-center">
         <h2 className="font-bold text-3xl">CREATE NEW EMAIL TEMPLATE</h2>
         <p className="text-lg text-gray-400"> Professional Email Templates at Your Fingertips</p>

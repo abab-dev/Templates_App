@@ -5,7 +5,8 @@ import { Button } from '../button'
 import { SignedOut, SignInButton, SignedIn, UserButton } from '@clerk/nextjs'
 function Header() {
   return (
-    <div className='flex justify-between items-center shadow-sm'>
+    // Removed shadow-sm and added padding for spacing
+    <div className='flex justify-between items-center p-4'>
       <Image src="/logo.png" alt='logo' width={50} height={80}></Image>
 
       <div className='flex gap-3 items-center'>
