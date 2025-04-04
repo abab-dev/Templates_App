@@ -5,11 +5,15 @@ import Prompt from "@/Prompt";
 import { Textarea } from "../textarea";
 import { Button } from "../button";
 import axios from "axios";
+import {v4 as uuidv4 } from 'uuid'
+import { useMutation } from "convex/react";
 export default function AIInputBox() {
   const [userInput, setUserInput] = useState()
   const [isLoading, setIsLoading] = useState(false)
+  const saveTemplate = useMutation(api.emailTemplate.saveTemplate)
   const onGenerate = async () => {
     const PROMPT = Prompt.EMAIL_PROMPT + '\n-' + userInput;
+    const tId = uuidv4()
 
     setIsLoading(true)
     try {
@@ -20,6 +24,13 @@ export default function AIInputBox() {
       })
 
       console.log(result.data.data)
+      await saveTemplate({
+        tId:tId,
+        design:result.data.data,
+        email:
+      }
+
+      )
       setIsLoading(false)
     } catch(e){
       console.log(e)
