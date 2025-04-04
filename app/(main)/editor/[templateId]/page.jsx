@@ -9,15 +9,15 @@ import { GetTemplateDesign } from "@/convex/emailTemplate";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useEmailTemplate } from "@/app/provider";
-import { useConvexAuth } from "convex/react";
 import { Loader2 } from "lucide-react";
+import { useConvex } from "convex/react";
 
 function Editor() {
   const [viewHTMLCode, setViewHTMLCode] = useState();
   const { templateId } = useParams();
   const { user } = useUser();
   const { emailTemplate, setEmailTemplate } = useEmailTemplate();
-  const convex = useConvexAuth();
+  const convex = useConvex();
   const [isLoading, setIsLoading] = useState(true);
 
   const getTemplateData = async () => {
@@ -28,7 +28,7 @@ function Editor() {
         email: user?.primaryEmailAddress?.emailAddress,
       });
       console.log(result);
-      setEmailTemplate([result?.design]); // Set the design in global context
+      setEmailTemplate(result?.design); // Set the design in global context
     } catch (error) {
       console.error("Error fetching template data:", error);
     } finally {
