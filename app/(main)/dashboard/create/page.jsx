@@ -1,22 +1,51 @@
 "use client"; // Required for useRouter and useState/context hooks
-import React from "react";
+"use client"; // Required for useRouter and useState/context hooks
+import React, { useState } from "react"; // Import useState
 import { useRouter } from "next/navigation"; // Import useRouter
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2 } from "lucide-react"; // Import Loader2
 import AIInputBox from '@/components/ui/custom/AIInputBox';
 import { Button } from "@/components/ui/button"; // Import Button
 import { useEmailTemplate } from "@/app/provider"; // Import context hook
+import { v4 as uuidv4 } from "uuid"; // Import uuid
+import { useMutation } from "convex/react"; // Import useMutation
+import { api } from "@/convex/_generated/api"; // Import api
+import { useUser } from "@clerk/nextjs"; // Import useUser
 
 export default function CreateNew() {
   const router = useRouter(); // Initialize router
   const { setEmailTemplate } = useEmailTemplate(); // Get setEmailTemplate from context
+  const { user } = useUser(); // Get user data
+  const saveTemplate = useMutation(api.emailTemplate.saveTemplate); // Initialize mutation
+  const [isLoadingScratch, setIsLoadingScratch] = useState(false); // Loading state for scratch button
 
-  const handleStartFromScratch = () => {
-    // Clear the existing template in the context/localStorage
-    setEmailTemplate([]);
-    // Navigate to the editor page
-    router.push('/dashboard/editor'); // Assuming '/dashboard/editor' is the route
+  const handleStartFromScratch = async () => {
+    setIsLoadingScratch(true);
+    const tId = uuidv4(); // Generate unique ID
+
+    try {
+      // Save an empty template structure to the database
+      await saveTemplate({
+        tId: tId,
+        design: JSON.stringify([]), // Start with an empty design array
+        email: user?.primaryEmailAddress?.emailAddress || "",
+        description: "Started from scratch", // Add a default description
+      });
+
+      // Clear the local state (optional, as editor will fetch based on tId)
+      setEmailTemplate([]);
+
+      // Navigate to the editor page with the new template ID
+      router.push(`/editor/${tId}`);
+
+    } catch (error) {
+      console.error("Error starting from scratch:", error);
+      // Handle error appropriately (e.g., show a notification)
+      setIsLoadingScratch(false); // Reset loading state on error
+    }
+    // No need to set isLoadingScratch to false on success, as navigation occurs
   };
+
   return (
     // Removed gradient classes, layout now handles it. Kept padding/margin.
     <div className="p-10 md:px-28 lg:px-72 mt-20 xl:px-64">
@@ -36,8 +65,15 @@ export default function CreateNew() {
               <p className="text-center text-gray-500">
                 Start with a blank canvas and build your email template element by element.
               </p>
-              <Button onClick={handleStartFromScratch}>
-                Start Building
+              <Button onClick={handleStartFromScratch} disabled={isLoadingScratch}>
+                {isLoadingScratch ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Starting...
+                  </>
+                ) : (
+                  'Start Building'
+                )}
               </Button>
             </div>
           </TabsContent>
