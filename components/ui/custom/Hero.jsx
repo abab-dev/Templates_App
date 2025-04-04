@@ -8,13 +8,8 @@ function Hero() {
        {/* Slightly smaller, less bold heading, increased bottom margin */}
       <h2 className='text-bold text-4xl md:text-5xl text-center mb-6'>AI Powered <span className='text-primary'>Email Templates</span></h2>
        {/* Use a slightly lighter text color for description, increased max-width */}
-      <p className='text-center text-muted-foreground mt-4 max-w-xl md:max-w-2xl'>Your super amazing application description
-        Your super amazing application description
-        Your super amazing application description
-        Your super amazing application description
-        Your super amazing application description
-        Your super amazing application description
-        Your super amazing application description
+      <p className='text-center text-muted-foreground mt-4 max-w-xl md:max-w-2xl'>
+        Effortlessly create stunning email templates with our AI-powered design tool. Customize layouts, add content, and generate HTML code in minutes.
       </p>
        {/* Increased margin top for buttons */}
       <div className='flex gap-4 mt-8'>
