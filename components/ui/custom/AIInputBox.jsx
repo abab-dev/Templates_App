@@ -19,6 +19,7 @@ export default function AIInputBox() {
   const router = useRouter()
   const { user } = useUser();
   const hasUserCredits = useQuery(api.users.hasCredits, { clerkId: user?.id || "empty" });
+  const decrementUserCredits = useMutation(api.users.decrementCredits);
 
   const onGenerate = async () => {
     if (!hasUserCredits) {
@@ -43,6 +44,7 @@ export default function AIInputBox() {
         email: user?.primaryEmailAddress?.emailAddress || "",
         description: userInput,
       });
+      decrementUserCredits({ clerkId: user?.id || "empty" });
       router.push('/editor/' + tId)
       setIsLoading(false);
     } catch (e) {

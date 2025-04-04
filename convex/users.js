@@ -81,3 +81,15 @@ export const hasCredits = query({
     return user ? user.credits > 0 : false;
   },
 });
+
+export const decrementCredits = mutation({
+  args: { clerkId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await userByClerkId(ctx, args.clerkId);
+    if (user && user.credits > 0) {
+      await ctx.db.patch(user._id, { credits: user.credits - 1 });
+      return true; // Indicate successful decrement
+    }
+    return false; // Indicate failure (no credits or user not found)
+  },
+});
