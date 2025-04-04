@@ -8,7 +8,7 @@ import SliderField from "./Settings/SliderField";
 import TextAreaField from "./Settings/TextAreaField";
 import SelectField from "./Settings/SelectField";
 import CaseSwitchingField from "./Settings/CaseSwitchingField";
- // Import the new component
+// Import the new component
 
 // Define options for the select fields
 const justifyContentOptions = [
@@ -82,13 +82,7 @@ export default function Settings() {
           onHandleInputChange={(value) => onHandleInputChange("content", value)}
         />
       )}
-      {element?.content != null && (
-        <CaseSwitchingField
-          label="Content Uppercase"
-          value={element.style.textTransform}
-          onHandleInputChange={(value) => onHandleInputChange("content", element?.content?.toUpperCase())}
-        />
-      )}
+
       {element?.textarea != null && (
         <TextAreaField
           label="TextArea"
@@ -96,13 +90,7 @@ export default function Settings() {
           onHandleInputChange={(value) => onHandleInputChange("textarea", value)}
         />
       )}
-      {element?.textarea != null && (
-        <CaseSwitchingField
-          label="TextArea Uppercase"
-          value={element.style.textTransform}
-          onHandleInputChange={(value) => onHandleInputChange("textarea", element?.textarea?.toUpperCase())}
-        />
-      )}
+
       {element?.imageUrl != null && (
         <InputField
           label="Image URL"
@@ -186,11 +174,28 @@ export default function Settings() {
           onHandleStyleChange={(value) => onHandleStyleChange("margin", value)}
         />
       )}
-       {element?.style?.textTransform != null && (
+      {element?.content != null && (
         <CaseSwitchingField
-          label="Uppercase"
-          value={element.style.textTransform}
-          onHandleStyleChange={(value) => onHandleStyleChange("textTransform", value)}
+          label="Content Case"
+          element={element}
+          fieldName="content"
+          value={element?.style?.textTransform}
+          onHandleInputChange={(fieldName, value) => {
+            const newValue = value === "uppercase" ? element?.content?.toUpperCase() : element?.content?.toLowerCase();
+            onHandleInputChange(fieldName, newValue);
+          }}
+        />
+      )}
+      {element?.textarea != null && (
+        <CaseSwitchingField
+          label="Textarea Case"
+          element={element}
+          fieldName="textarea"
+          value={element?.style?.textTransform}
+          onHandleInputChange={(fieldName, value) => {
+            const newValue = value === "uppercase" ? element?.textarea?.toUpperCase() : element?.textarea?.toLowerCase();
+            onHandleInputChange(fieldName, newValue);
+          }}
         />
       )}
       <div>
