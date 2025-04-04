@@ -74,10 +74,14 @@ export default function Settings() {
     <div className="p-5 flex flex-col gap-4">
       <h2 className="font-bold text-xl">Settings</h2>
       {
-        element?.content &&
-        <InputField label={'Content'} value={element?.content}
-          onHandleInputChange={(value) => onHandleInputChange("content", value)}></InputField>
-      }{
+  element?.content != null &&
+  <InputField
+    label="Content"
+    value={element.content}
+    onHandleInputChange={(value) => onHandleInputChange("content", value)}
+  />
+}
+{
         element?.textarea &&
         <TextAreaField label={'TextArea'} value={element?.textarea}
           onHandleInputChange={(value) => onHandleInputChange("textarea", value)}></TextAreaField>
