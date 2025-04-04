@@ -13,7 +13,7 @@ export default function SelectField({ label, value, options, onHandleChange }) {
       <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
         {label}
       </label>
-      <Select onValueChange={onHandleChange} value={value}>
+      <Select onValueChange={onHandleChange} defaultValue={value}>
         <SelectTrigger>
           <SelectValue placeholder={`Select ${label}`} />
         </SelectTrigger>
