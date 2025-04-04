@@ -28,7 +28,7 @@ function Editor() {
         email: user?.primaryEmailAddress?.emailAddress,
       });
       console.log(result);
-      setEmailTemplate((result?.design)); // Set the design in global context
+      setEmailTemplate(JSON.parse(result?.design)); // Set the design in global context
     } catch (error) {
       console.error("Error fetching template data:", error);
     } finally {
