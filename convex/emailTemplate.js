@@ -45,6 +45,24 @@ export const GetTemplateDesign = query({
   },
 });
 
+export const GetAllTemplatesForEmail = query({
+  args: {
+    email: v.string(),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const result = await ctx.db
+        .query("emailTemplates")
+        .filter((q) => q.eq(q.field("email"), args.email))
+        .collect();
+
+      return result;
+    } catch (e) {
+      return [];
+    }
+  },
+});
+
 export const UpdateTemplateDesign = mutation({
   args: {
     tId: v.string(),
