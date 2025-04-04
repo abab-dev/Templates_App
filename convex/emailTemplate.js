@@ -46,24 +46,23 @@ export const GetTemplateDesign = query({
 });
 
 export const UpdateTemplateDesign = mutation({
-  args:{
-    tId:v.string(),
-    design:v.any()
+  args: {
+    tId: v.string(),
+    design: v.string(), // Expecting a JSON string
   },
   handler: async (ctx, args) => {
     const result = await ctx.db
-      .query('emailTemplates')
-      .filter(q => q.eq(q.field('tId'), args.tId))
+      .query("emailTemplates")
+      .filter((q) => q.eq(q.field("tId"), args.tId))
       .collect();
 
     if (result && result.length > 0) {
       const docId = result[0]._id;
       await ctx.db.patch(docId, {
-        design: args.design
+        design: JSON.parse(args.design), // Parse the JSON string back to an object
       });
     } else {
       console.warn(`No email template found with tId: ${args.tId}`);
     }
-  }
-
-})
+  },
+});

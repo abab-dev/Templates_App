@@ -12,12 +12,12 @@ function EditorHeader({ viewHTMLCode }) {
   const {templateId} = useParams()
   const updateEmailTemplate = useMutation(api.emailTemplate.UpdateTemplateDesign)
   const {emailTemplate,setEmailTemplate} = useEmailTemplate()
-  const onSaveTemplate = async () =>{
+  const onSaveTemplate = async () => {
     await updateEmailTemplate({
-      tId:templateId,
-      design:emailTemplate,
-    })
-  }
+      tId: templateId,
+      design: JSON.stringify(emailTemplate),
+    });
+  };
   return (
     <div className='flex shadow-sm justify-between items-center'>
       <Image src="/logo.png" alt='logo' width={50} height={80}></Image>
