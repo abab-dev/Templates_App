@@ -10,9 +10,9 @@ import { useParams } from 'next/navigation'
 import { toast } from 'sonner'
 function EditorHeader({ viewHTMLCode }) {
   const { screenSize, setScreenSize } = useScreenSize()
-  const {templateId} = useParams()
+  const { templateId } = useParams()
   const updateEmailTemplate = useMutation(api.emailTemplate.UpdateTemplateDesign)
-  const {emailTemplate,setEmailTemplate} = useEmailTemplate()
+  const { emailTemplate, setEmailTemplate } = useEmailTemplate()
   const onSaveTemplate = async () => {
     const designData = emailTemplate.map(layout => {
       // Ensure that layout is defined and has the necessary properties
@@ -42,13 +42,16 @@ function EditorHeader({ viewHTMLCode }) {
         <Button variant="ghost" onClick={() => setScreenSize('mobile')} className={`${screenSize == 'mobile' && 'bg-purple-100 text-primary'}`}><Smartphone />Mobile</Button>
 
       </div >
-      <div className="flex gap-3 "><Button
-      onClick={onSaveTemplate}>save template</Button>
-        <Button variant={'outline'}>send test email </Button>
+      <div className="flex gap-3 ">
 
         <Button className="hover:text-primary hover:bg-purple-100" variant={'ghost'}
           onClick={() => viewHTMLCode(true)}
-        ><Code /></Button></div>
+        ><Code /></Button>
+        <Button className={"mr-2"}
+          onClick={onSaveTemplate}>save template</Button>
+
+
+      </div>
     </div>
   )
 }

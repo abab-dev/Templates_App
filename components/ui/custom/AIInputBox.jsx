@@ -56,7 +56,7 @@ export default function AIInputBox() {
   return (
     <div className="mt-5">
       <p>Provide the details to create your Template</p>
-      <Textarea onChange={(e) => setUserInput(e.target.value)} placeholder="Start writing here" rows="5" className={"text-xl my-5"} />
+      <Textarea onChange={(e) => setUserInput(e.target.value)} placeholder="Start writing here" rows="5" className={"text-xl my-5 "} />
       <Button
         disabled={!userInput || userInput.length === 0 || isLoading}
         onClick={onGenerate}
