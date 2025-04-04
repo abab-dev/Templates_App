@@ -28,8 +28,9 @@ function Editor() {
         email: user?.primaryEmailAddress?.emailAddress,
       });
       console.log("Fetched template data:", result);
-      // result.design is already an object from Convex, no need to parse
-      setEmailTemplate(result?.design || []); // Set the design, fallback to empty array
+      // Parse the design if it's a string
+      const design = typeof result?.design === 'string' ? JSON.parse(result.design) : result?.design;
+      setEmailTemplate(design || []); // Set the design, fallback to empty array
     } catch (error) {
       console.error("Error fetching template data:", error);
       setEmailTemplate([]); // Set empty on error
