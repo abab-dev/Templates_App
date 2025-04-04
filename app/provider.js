@@ -16,9 +16,14 @@ function Provider({ children }) {
   // Load emailTemplate from localStorage on initial mount (if authenticated)
   useEffect(() => {
     if (typeof window !== "undefined" && isSignedIn) {
-      const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? "[]")
-      if (storedTemplate) {
-        setEmailTemplate((storedTemplate));
+      try {
+        const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? "[]");
+        if (storedTemplate) {
+          setEmailTemplate((storedTemplate));
+        }
+      } catch (error) {
+        console.error("Error parsing emailTemplate from localStorage:", error);
+        setEmailTemplate([]); // Set to empty array as a fallback
       }
     }
   }, [isSignedIn]);
