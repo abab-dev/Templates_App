@@ -47,10 +47,11 @@ function EditorHeader({ viewHTMLCode }) {
         <Button className="hover:text-primary hover:bg-purple-100" variant={'ghost'}
           onClick={() => viewHTMLCode(true)}
         ><Code /></Button>
+        <Link href={'/dashboard'}>
+          <Button variant={"outline"} className={"mr-2"}>Dashboard</Button>
+        </Link>
         <Button className={"mr-2"}
           onClick={onSaveTemplate}>save template</Button>
-
-
       </div>
     </div>
   )
