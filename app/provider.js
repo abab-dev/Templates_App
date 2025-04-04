@@ -13,25 +13,15 @@ function Provider({ children }) {
   const [emailTemplate, setEmailTemplate] = useState([]);
   const [selectedElement, setSelectedElement] = useState()
 
-  // Load emailTemplate from localStorage on initial mount (if authenticated)
   useEffect(() => {
-    if (typeof window !== "undefined" && isSignedIn) {
-      const storedTemplateString = localStorage.getItem("emailTemplate");
-      if (storedTemplateString) {
-        try {
-          const storedTemplate = JSON.parse(storedTemplateString);
-          setEmailTemplate(storedTemplate);
-        } catch (error) {
-          console.error("Error parsing emailTemplate from localStorage:", error);
-          setEmailTemplate([]); // Set to empty array as a fallback
-        }
-      } else {
-        setEmailTemplate([]); // If no template in localStorage, set to empty array
-      }
-    }
-  }, [isSignedIn]);
-
-  // Store emailTemplate in localStorage (only if authenticated)
+        if (typeof window !== "undefined" && isSignedIn) {                                                                                                     │
+          const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? {})                                                                       │
+          if (storedTemplate) {                                                                                                                                │
+            setEmailTemplate(JSON.parse(storedTemplate));                                                                                                      │
+            setEmailTemplate((storedTemplate));                                                                                                                │
+          }                                                                                                                                                    │
+        }                                                                                                                                                      │
+      }, [isSignedIn]); // Run only when authentication state changes                                                                                          │
   useEffect(() => {
     if (typeof window !== "undefined" && isSignedIn) {
       localStorage.setItem("emailTemplate", JSON.stringify(emailTemplate));
