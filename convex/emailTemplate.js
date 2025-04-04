@@ -66,7 +66,7 @@ export const GetAllTemplatesForEmail = query({
 export const UpdateTemplateDesign = mutation({
   args: {
     tId: v.string(),
-    design: v.string(), // Expecting a JSON string
+    design: v.any(), // Expecting the design object directly
   },
   handler: async (ctx, args) => {
     const result = await ctx.db
@@ -76,8 +76,9 @@ export const UpdateTemplateDesign = mutation({
 
     if (result && result.length > 0) {
       const docId = result[0]._id;
+      // Patch with the design object directly
       await ctx.db.patch(docId, {
-        design: JSON.parse(args.design), // Parse the JSON string back to an object
+        design: args.design,
       });
     } else {
       console.warn(`No email template found with tId: ${args.tId}`);

@@ -27,10 +27,12 @@ function Editor() {
         tId: templateId,
         email: user?.primaryEmailAddress?.emailAddress,
       });
-      console.log(result);
-      setEmailTemplate(JSON.parse(result?.design)); // Set the design in global context
+      console.log("Fetched template data:", result);
+      // result.design is already an object from Convex, no need to parse
+      setEmailTemplate(result?.design || []); // Set the design, fallback to empty array
     } catch (error) {
       console.error("Error fetching template data:", error);
+      setEmailTemplate([]); // Set empty on error
     } finally {
       setIsLoading(false);
     }
