@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import Header from '@/components/ui/custom/Header'
+import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import EmailTemplateList from "@/components/ui/custom/EmailTemplateList"
@@ -24,7 +24,9 @@ function Dashboard() {
               </div>
             )}
           </h2>
+          <Link href={'/dashboard/create'}>
           <Button>Create New Email Template</Button>
+</Link>
         </div>
         <EmailTemplateList></EmailTemplateList>
       </div>

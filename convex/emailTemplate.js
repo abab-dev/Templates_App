@@ -6,12 +6,14 @@ export const saveTemplate = mutation({
     tId: v.string(),
     design: v.any(),
     email: v.string(),
+    description:v.any()
   },
   handler: async (ctx, args) => {
     try {
       const result = await ctx.db.insert("emailTemplates", {
         tId: args.tId,
         design: args.design,
+        description:args.description,
         email: args.email,
       });
       return result;
@@ -42,3 +44,21 @@ export const GetTemplateDesign = query({
     }
   },
 });
+
+export const UpdateTemplateDesign = mutation({
+  args:{
+    tId:v.string(),
+    design:v.any()
+  },
+  handler :async(ctx,args)=>{
+    const result = ctx.db.query('emailTemplates')
+      .filter(q=>q.eq(q.field('tId'),args.tId))
+      .collect()
+
+      const docId = result[0]._id
+      await ctx.db.patch(docId,{
+        design:args.design
+      })
+    }
+
+})

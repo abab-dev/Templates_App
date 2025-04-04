@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import React from 'react'
 import Link from 'next/link'
+import React from 'react'
 import { Button } from '../button'
 import { SignedOut, SignInButton, SignedIn, UserButton } from '@clerk/nextjs'
 function Header() {
