@@ -29,11 +29,12 @@ export default function RootLayout({ children }) {
         >
           <ConvexClientProvider>
             <Provider>
-              {children}
+              <div>{children}</div>
             </Provider>
             {/* <Toaster/> */}
           </ConvexClientProvider>
         </body>
-      </html></ClerkProvider>
+      </html>
+    </ClerkProvider>
   );
 }
