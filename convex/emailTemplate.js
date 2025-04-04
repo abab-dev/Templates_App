@@ -50,15 +50,20 @@ export const UpdateTemplateDesign = mutation({
     tId:v.string(),
     design:v.any()
   },
-  handler :async(ctx,args)=>{
-    const result = ctx.db.query('emailTemplates')
-      .filter(q=>q.eq(q.field('tId'),args.tId))
-      .collect()
+  handler: async (ctx, args) => {
+    const result = await ctx.db
+      .query('emailTemplates')
+      .filter(q => q.eq(q.field('tId'), args.tId))
+      .collect();
 
-      const docId = result[0]._id
-      await ctx.db.patch(docId,{
-        design:args.design
-      })
+    if (result && result.length > 0) {
+      const docId = result[0]._id;
+      await ctx.db.patch(docId, {
+        design: args.design
+      });
+    } else {
+      console.warn(`No email template found with tId: ${args.tId}`);
     }
+  }
 
 })
