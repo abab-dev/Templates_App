@@ -23,18 +23,18 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
+        <ClerkProvider>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider>
-          <ConvexClientProvider>
+      
             <Provider>
               <div>{children}</div>
             </Provider>
             {/* <Toaster/> */}
-          </ConvexClientProvider>
-        </ClerkProvider>
+   
       </body>
+      </ClerkProvider>
     </html>
   );
 }

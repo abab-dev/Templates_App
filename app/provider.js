@@ -5,7 +5,8 @@ import { ScreenSizeContext } from "@/context/ScreenSizeContext";
 import { useContext, useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs"; // Clerk auth hook
 import { SelectedElementContext } from "@/context/SelectedElementContext"
-import { jsonToConvex } from "convex/values";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexClientProvider } from "@/components/convex-client-provider";
 function Provider({ children }) {
   const { isSignedIn } = useUser(); // Check if user is authenticated
 
@@ -45,6 +46,7 @@ function Provider({ children }) {
   }, [selectedElement])
 
   return (
+          <ConvexClientProvider>
     <ScreenSizeContext.Provider value={{ screenSize, setScreenSize }}>
       <DragDropLayoutElement.Provider value={{ dragElementLayout, setDragElementLayout }}>
         <EmailTemplateContext.Provider value={{ emailTemplate, setEmailTemplate }}>
@@ -54,6 +56,7 @@ function Provider({ children }) {
         </EmailTemplateContext.Provider>
       </DragDropLayoutElement.Provider>
     </ScreenSizeContext.Provider>
+    </ConvexClientProvider>
   );
 }
 
