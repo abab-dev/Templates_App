@@ -68,10 +68,12 @@ export default function Canvas({ viewHTMLCode, closeDialog }) {
             <div key={index}>{getLayoutComponent(layout)}</div>
           ))
         ) : (
-           {/* Minimal placeholder style */}
-          <div className="p-10 text-center border border-dashed border-border rounded-md text-muted-foreground">
-            <p>Drag and drop layouts or elements here</p>
-          </div>
+          
+            {/* Minimal placeholder style */}
+            <div className="p-10 text-center border border-dashed border-border rounded-md text-muted-foreground">
+              <p>Drag and drop layouts or elements here</p>
+            </div>
+          
         )}
       </div>
       <ViewCodeDialog openDialog={viewHTMLCode} htmlCode={htmlCode} closeDialog={closeDialog}></ViewCodeDialog>
