@@ -36,6 +36,7 @@ export default function AIInputBox() {
         tId: tId,
         design: result.data.data,
         email: user?.primaryEmailAddress?.emailAddress || "",
+        description: userInput,
       });
       router.push('/editor'+tId)
       setIsLoading(false);
