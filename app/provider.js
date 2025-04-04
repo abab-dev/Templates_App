@@ -17,13 +17,18 @@ function Provider({ children }) {
   useEffect(() => {
     if (typeof window !== "undefined" && isSignedIn) {
       try {
-        const storedTemplate = JSON.parse(localStorage.getItem("emailTemplate") ?? "[]");
-        if (storedTemplate) {
-          setEmailTemplate((storedTemplate));
+    if (typeof window !== "undefined" && isSignedIn) {
+      const storedTemplateString = localStorage.getItem("emailTemplate");
+      if (storedTemplateString) {
+        try {
+          const storedTemplate = JSON.parse(storedTemplateString);
+          setEmailTemplate(storedTemplate);
+        } catch (error) {
+          console.error("Error parsing emailTemplate from localStorage:", error);
+          setEmailTemplate([]); // Set to empty array as a fallback
         }
-      } catch (error) {
-        console.error("Error parsing emailTemplate from localStorage:", error);
-        setEmailTemplate([]); // Set to empty array as a fallback
+      } else {
+        setEmailTemplate([]); // If no template in localStorage, set to empty array
       }
     }
   }, [isSignedIn]);
