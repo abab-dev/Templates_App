@@ -29,7 +29,8 @@ function Hero() {
         width={1000}
         height={1000}
         alt="hero-image"
-        className="mt-16 md:mt-20 rounded-lg" // Added subtle rounding
+        // Added animate-float for the floating effect
+        className="mt-16 md:mt-20 rounded-lg animate-float"
       >
 
       </Image>
