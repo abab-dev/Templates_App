@@ -50,10 +50,17 @@ http.route({
        await ctx.runMutation(internal.users.deleteFromClerk, { clerkUserId });
        break;
      }
-     case "session.created":
-       // Potentially log session creation or relate session data if needed in the future
-       console.log("Received session.created event, User ID:", event.data.user_id, "Session ID:", event.data.id);
+     case "session.created": {
+       const clerkUserId = event.data.user_id;
+       console.log("Received session.created event, User ID:", clerkUserId, "Session ID:", event.data.id);
+       // Ensure the user exists in our database
+       if (clerkUserId) {
+         await ctx.runAction(internal.users.ensureUserExists, { clerkUserId });
+       } else {
+         console.error("session.created event missing user_id:", event.data);
+       }
        break;
+     }
      case "session.ended":
        // Handle session ending, e.g., logging out user status if tracked
        console.log("Received session.ended event, User ID:", event.data.user_id, "Session ID:", event.data.id);

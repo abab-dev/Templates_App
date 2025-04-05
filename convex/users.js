@@ -1,5 +1,11 @@
-import { internalMutation, mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query, internalAction } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
+import { Webhook } from "svix"; // Keep if needed elsewhere, but not directly for Clerk SDK
+import { Clerk } from "@clerk/clerk-sdk-node"; // Import Clerk SDK
+
+// Initialize Clerk client. Ensure CLERK_SECRET_KEY is set in Convex environment variables.
+const clerk = Clerk({ secretKey: process.env.CLERK_SECRET_KEY });
 
 
 export const upsertFromClerk = internalMutation({
@@ -31,6 +37,42 @@ export const upsertFromClerk = internalMutation({
     }
   },
 });
+
+// Action to ensure user exists, fetching from Clerk if necessary
+export const ensureUserExists = internalAction({
+  args: { clerkUserId: v.string() },
+  async handler(ctx, { clerkUserId }) {
+    // Check if user already exists
+    const user = await ctx.runQuery(internal.users.getUserByClerkId, { clerkId: clerkUserId });
+
+    if (user !== null) {
+      // User exists, no action needed
+      console.log(`User ${clerkUserId} already exists.`);
+      return;
+    }
+
+    // User doesn't exist, fetch from Clerk
+    console.log(`User ${clerkUserId} not found in DB. Fetching from Clerk...`);
+    try {
+      const clerkUser = await clerk.users.getUser(clerkUserId);
+      if (!clerkUser) {
+        console.error(`Could not find user ${clerkUserId} in Clerk.`);
+        // Decide if you want to throw an error or just log
+        return;
+      }
+
+      // Call the mutation to create/update the user in Convex DB
+      // Pass the fetched Clerk user data structure
+      await ctx.runMutation(internal.users.upsertFromClerk, { data: clerkUser });
+      console.log(`Successfully created user ${clerkUserId} from Clerk data.`);
+
+    } catch (error) {
+      console.error(`Error fetching user ${clerkUserId} from Clerk or upserting:`, error);
+      // Handle error appropriately, maybe throw to signal failure
+    }
+  },
+});
+
 
 export const deleteFromClerk = internalMutation({
   args: { clerkUserId: v.string() },
