@@ -29,8 +29,8 @@ http.route({
 
     // Ensure event has a 'type' property before switching
     if (typeof event !== 'object' || event === null || !('type' in event)) {
-        console.error("Received invalid event structure from webhook verification");
-        return new Response("Invalid event structure", { status: 400 });
+      console.error("Received invalid event structure from webhook verification");
+      return new Response("Invalid event structure", { status: 400 });
     }
 
     switch (event.type) {
@@ -43,35 +43,24 @@ http.route({
 
       case "user.deleted": {
         const clerkUserId = event.data.id;
-       if (!clerkUserId) {
-           console.error("User deleted event missing user ID:", event.data);
-           return new Response("Invalid event data for user.deleted", { status: 400 });
-       }
-       await ctx.runMutation(internal.users.deleteFromClerk, { clerkUserId });
-       break;
-     }
-     case "session.created": {
-       const clerkUserId = event.data.user_id;
-       console.log("Received session.created event, User ID:", clerkUserId, "Session ID:", event.data.id);
-       // Ensure the user exists in our database
-       if (clerkUserId) {
-         await ctx.runAction(internal.users.ensureUserExists, { clerkUserId });
-       } else {
-         console.error("session.created event missing user_id:", event.data);
-       }
-       break;
-     }
-     case "session.ended":
-       // Handle session ending, e.g., logging out user status if tracked
-       console.log("Received session.ended event, User ID:", event.data.user_id, "Session ID:", event.data.id);
-       break;
-     case "session.revoked":
-       // Handle revoked sessions, potentially forcing logout or cleanup
-       console.log("Received session.revoked event, User ID:", event.data.user_id, "Session ID:", event.data.id);
-       break;
-     default:
-       console.log("Ignored Clerk webhook event:", event.type);
-   }
+        if (!clerkUserId) {
+          console.error("User deleted event missing user ID:", event.data);
+          return new Response("Invalid event data for user.deleted", { status: 400 });
+        }
+        await ctx.runMutation(internal.users.deleteFromClerk, { clerkUserId });
+        break;
+      }
+      case "session.created": {
+        await ctx.runMutation(internal.users.upsertFromClerk, {
+          data: event.data,
+        });
+
+
+        break;
+      }
+      default:
+        console.log("Ignored Clerk webhook event:", event.type);
+    }
 
     return new Response(null, { status: 200 });
   }),
