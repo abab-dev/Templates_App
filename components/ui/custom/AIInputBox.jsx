@@ -11,6 +11,8 @@ import { api } from "../../../convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useConvex } from "convex/react";
+
 
 export default function AIInputBox() {
   const [userInput, setUserInput] = useState();
@@ -18,8 +20,12 @@ export default function AIInputBox() {
   const saveTemplate = useMutation(api.emailTemplate.saveTemplate);
   const router = useRouter()
   const { user } = useUser();
-  const hasUserCredits = useQuery(api.users.hasCredits, { clerkId: user?.id || "empty" });
-  const decrementUserCredits = useMutation(api.users.decrementCredits);
+  const convex = useConvex()
+  const hasUserCredits = convex.query(api.users.hasCredits, { clerkId: user?.id || "empty" });
+
+  const decrementUserCredits = useMutation(api.users.decrementCredits, {
+    clerkId: user?.id
+  });
 
   const onGenerate = async () => {
     if (!hasUserCredits) {
@@ -44,7 +50,7 @@ export default function AIInputBox() {
         email: user?.primaryEmailAddress?.emailAddress || "",
         description: userInput,
       });
-      decrementUserCredits({ clerkId: user?.id || "empty" });
+      decrementUserCredits();
       router.push('/editor/' + tId)
       setIsLoading(false);
     } catch (e) {
