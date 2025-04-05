@@ -43,7 +43,6 @@ http.route({
 
       case "user.deleted": {
         const clerkUserId = event.data.id;
-       const clerkUserId = event.data.id;
        if (!clerkUserId) {
            console.error("User deleted event missing user ID:", event.data);
            return new Response("Invalid event data for user.deleted", { status: 400 });
