@@ -5,7 +5,6 @@ import ElementSidebar from "@/components/ui/custom/ElementSidebar";
 import Canvas from "@/components/ui/custom/Canvas";
 import Settings from "@/components/ui/custom/Settings";
 import { useParams } from "next/navigation";
-import { GetTemplateDesign } from "@/convex/emailTemplate";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useEmailTemplate } from "@/app/provider";
