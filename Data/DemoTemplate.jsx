@@ -11,7 +11,7 @@ export const Demotemplate = [
           "backgroundColor": "#FFFFFF",
           "padding": ["20px"],
           "height": "auto",
-          "width": ["30%"],
+          "width": ["100%"],
           "borderBottom": "3px solid #000000"
         },
         "outerStyle": {
@@ -92,7 +92,7 @@ export const Demotemplate = [
         "icon": {},
         "type": "Image",
         "label": "Main Image",
-        "imageUrl": "/ethimage.png",
+        "imageUrl": "/monochrome_smart.jpeg",
         "alt": "Abstract Blockchain Representation",
         "url": "#",
         "style": {
@@ -192,14 +192,14 @@ export const Demotemplate = [
         "icon": {},
         "type": "Image",
         "label": "Icon Image",
-        "imageUrl": "/ethicon.png",
+        "imageUrl": "/ethlogo.png",
         "alt": "Smart Contract Icon",
         "url": "#",
         "style": {
           "backgroundColor": "#FFFFFF",
-          "padding": "10px",
+          "padding": "0px",
           "height": "auto",
-          "width": ["50%"],
+          "width": ["100%"],
           "margin": "0 auto",
           "borderRadius": "0px",
           "border": "2px solid #000000"
@@ -210,7 +210,7 @@ export const Demotemplate = [
           "justifyContent": "center",
           "alignItems": "center",
           "backgroundColor": "#000000",
-          "padding": ["20px", "10px"]
+          "padding": ["0px", "0px"]
         },
         "id": 1738100170001
       },
@@ -218,7 +218,7 @@ export const Demotemplate = [
         "icon": {},
         "type": "Text",
         "label": "Feature Text",
-        "textarea": "<strong>Key Features Unlocked:</strong><br/>✅ Smart Contracts<br/>✅ Decentralized Apps (DApps)<br/>✅ Unstoppable Code<br/>✅ New Digital Economies",
+        "textarea": "Key Features Unlocked:\nSmart Contracts\nDecentralized Apps (DApps)\nUnstoppable Code\nNew Digital Economies",
         "style": {
           "backgroundColor": "#000000",
           "color": "#FFFFFF",
