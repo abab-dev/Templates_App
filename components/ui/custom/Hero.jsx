@@ -1,6 +1,8 @@
+
 import { Button } from '../button'
 import Image from 'next/image'
 import React from 'react'
+import Link from 'next/link'
 function Hero() {
   return (
     // Increased vertical padding (mt), adjusted horizontal padding for different screens

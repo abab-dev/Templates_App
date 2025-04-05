@@ -16,7 +16,7 @@ export const Demotemplate = [
         },
         "outerStyle": {
           "display": "flex",
-          "justifyContent": ["center"],
+          "justifyContent": "center",
           "alignItems": "center",
           "backgroundColor": "#FFFFFF",
           "width": "100%"
