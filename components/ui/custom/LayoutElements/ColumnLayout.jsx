@@ -61,7 +61,6 @@ export default function ColumnLayout({ layout }) {
   };
 
   const getElementComponent = (element) => {
-    console.log(element)
     if (element?.type == "Button") {
       return (<ButtonComponent {...element} />)
     }

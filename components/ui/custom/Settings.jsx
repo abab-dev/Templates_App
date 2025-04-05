@@ -30,8 +30,6 @@ export default function Settings() {
   }, [selectedElement])
   const onHandleInputChange = (fieldName, value) => {
     const updatedData = { ...selectedElement }
-    console.log(updatedData.layout[selectedElement.index][fieldName]) 
-    updatedData.layout[selectedElement.index][fieldName] = value
     setSelectedElement(updatedData)
   }
   const onHandleStyleChange = (fieldName, fieldValue) => {
@@ -68,7 +66,6 @@ export default function Settings() {
       }
 
     }
-    console.log(selectedElement?.layout[selectedElement.index]?.outerStyle)
     setSelectedElement(updatedData)
   }
   return (

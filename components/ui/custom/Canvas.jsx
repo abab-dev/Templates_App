@@ -24,7 +24,6 @@ export default function Canvas({ viewHTMLCode, closeDialog }) {
   const onDropHandle = () => {
     setDragOver(false);
     if (dragElementLayout) {
-      console.log("Dropped layout:", dragElementLayout?.dragLayout);
       setEmailTemplate(prev => [...prev, dragElementLayout?.dragLayout]);
     }
   };
@@ -43,7 +42,6 @@ export default function Canvas({ viewHTMLCode, closeDialog }) {
   const getHTMLCode = () => {
     if (htmlRef.current) {
       const htmlContent = htmlRef.current.innerHTML
-      console.log(htmlContent)
       setHtmlCode(htmlContent)
 
     }

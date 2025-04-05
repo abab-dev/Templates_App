@@ -41,7 +41,6 @@ export default function AIInputBox() {
         tId: 0,
       });
 
-      console.log(result.data.data);
       await saveTemplate({
         tId: tId,
         design: result.data.data,
@@ -55,7 +54,6 @@ export default function AIInputBox() {
       router.push('/editor/' + tId)
       setIsLoading(false);
     } catch (e) {
-      console.log(e);
       setIsLoading(false);
     }
   };

@@ -20,7 +20,7 @@ function Editor() {
   const router = useRouter();
   const { emailTemplate, setEmailTemplate } = useEmailTemplate();
   const convex = useConvex();
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
 
   const getTemplateData = async () => {
     setIsLoading(true);
@@ -40,7 +40,7 @@ function Editor() {
     }
   };
 
- useEffect(() => {
+  useEffect(() => {
     let isMounted = true; // Flag to track mount status
 
     const loadData = async () => {
@@ -70,12 +70,11 @@ function Editor() {
       // Or clearing when just logging in/out on the demo page
       // A more robust solution might involve tracking the *previous* templateId
       if (templateId !== "demo") {
-         console.log("Clearing template on unmount/dependency change for:", templateId);
-         // Optionally add a small delay if needed, but usually direct is fine
-         setEmailTemplate([]);
+        // Optionally add a small delay if needed, but usually direct is fine
+        setEmailTemplate([]);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, templateId, router, setEmailTemplate]); // Added setEmailTemplate dependency
 
 
@@ -106,7 +105,7 @@ function Editor() {
           // `}
           // style={stickyTopStyle}        /* Apply dynamic top offset */
           className="sticky self-start"
-          // style={{top:'0px'}}
+          style={{ top: '0px' }}
         >
           <ElementSidebar />
         </div>
@@ -133,7 +132,7 @@ function Editor() {
 
           className="sticky self-start"
 
-          style={{top:'0px'}}
+          style={{ top: '0px' }}
         >
           <Settings />
         </div>

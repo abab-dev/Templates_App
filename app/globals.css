@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -131,7 +130,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-
 label {
   font-size: 14px;
 }
@@ -147,11 +145,12 @@ label {
 
 @layer utilities {
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-10px); /* Adjust vertical distance as needed */
+      transform: translateY(-50px); /* Adjust vertical distance as needed */
     }
   }
 
