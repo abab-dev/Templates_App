@@ -1,13 +1,15 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google"; // Import Inter
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ConvexClientProvider } from "@/components/convex-client-provider";
 import Provider from "./provider";
 import { Toaster } from "sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Configure Inter font with variable weights
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter", // Assign CSS variable
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], // Specify weights
 });
 
 const geistMono = Geist_Mono({
@@ -25,9 +27,10 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning={true}>
         <ClerkProvider>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        // Apply Inter variable alongside Geist Mono
+        className={`${inter.variable} ${geistMono.variable} antialiased`}
       >
-      
+
             <Provider>
               <div>{children}</div>
             </Provider>
