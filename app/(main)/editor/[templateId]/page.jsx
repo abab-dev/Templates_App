@@ -43,7 +43,7 @@ function Editor() {
     if (user) {
       getTemplateData();
     } else {
-      setEmailTemplate(JSON.parse(Demotemplate));
+      setEmailTemplate(Demotemplate);
       setIsLoading(false); // Ensure loading is set to false when using demo template
     }
   }, [user]);
