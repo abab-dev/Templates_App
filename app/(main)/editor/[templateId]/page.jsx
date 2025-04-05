@@ -11,6 +11,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEmailTemplate } from "@/app/provider";
 import { Loader2 } from "lucide-react";
 import { useConvex } from "convex/react";
+import { Demotemplate } from "@/Data/DemoTemplate";
 
 function Editor() {
   const [viewHTMLCode, setViewHTMLCode] = useState();
@@ -41,6 +42,8 @@ function Editor() {
   useEffect(() => {
     if (user ) {
       getTemplateData();
+    }else{
+      setEmailTemplate(JSON.parse(Demotemplate))
     }
   }, [user ]);
 
