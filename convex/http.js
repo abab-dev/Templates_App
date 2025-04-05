@@ -43,12 +43,29 @@ http.route({
 
       case "user.deleted": {
         const clerkUserId = event.data.id;
-        await ctx.runMutation(internal.users.deleteFromClerk, { clerkUserId });
-        break;
-      }
-      default:
-        console.log("Ignored Clerk webhook event", event.type);
-    }
+       const clerkUserId = event.data.id;
+       if (!clerkUserId) {
+           console.error("User deleted event missing user ID:", event.data);
+           return new Response("Invalid event data for user.deleted", { status: 400 });
+       }
+       await ctx.runMutation(internal.users.deleteFromClerk, { clerkUserId });
+       break;
+     }
+     case "session.created":
+       // Potentially log session creation or relate session data if needed in the future
+       console.log("Received session.created event, User ID:", event.data.user_id, "Session ID:", event.data.id);
+       break;
+     case "session.ended":
+       // Handle session ending, e.g., logging out user status if tracked
+       console.log("Received session.ended event, User ID:", event.data.user_id, "Session ID:", event.data.id);
+       break;
+     case "session.revoked":
+       // Handle revoked sessions, potentially forcing logout or cleanup
+       console.log("Received session.revoked event, User ID:", event.data.user_id, "Session ID:", event.data.id);
+       break;
+     default:
+       console.log("Ignored Clerk webhook event:", event.type);
+   }
 
     return new Response(null, { status: 200 });
   }),
