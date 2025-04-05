@@ -23,9 +23,7 @@ export default function AIInputBox() {
   const convex = useConvex()
   const hasUserCredits = convex.query(api.users.hasCredits, { clerkId: user?.id || "empty" });
 
-  const decrementUserCredits = useMutation(api.users.decrementCredits, {
-    clerkId: user?.id
-  });
+  const decrementUserCredits = useMutation(api.users.decrementCredits );
 
   const onGenerate = async () => {
     if (!hasUserCredits) {
@@ -50,7 +48,10 @@ export default function AIInputBox() {
         email: user?.primaryEmailAddress?.emailAddress || "",
         description: userInput,
       });
-      decrementUserCredits();
+      decrementUserCredits(
+        { clerkId: user?.id || "empty" }
+
+      );
       router.push('/editor/' + tId)
       setIsLoading(false);
     } catch (e) {

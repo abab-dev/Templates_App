@@ -22,7 +22,8 @@ function Dashboard() {
     // Removed gradient classes, layout now handles it. Kept padding/margin.
     <div>
       <div className="p-10 md:px-28 lg:px-40 xl:px-56 mt-16">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center lg:flex-row flex-col ">
+
           <h2 className="font-bold text-3xl">
             {!user ? (
               <div>Please sign in.</div>
@@ -32,8 +33,8 @@ function Dashboard() {
               </div>
             )}
           </h2>
-          <Link href={'/dashboard/create'}>
-            <Button>Create New Email Template</Button>
+          <Link href={'/dashboard/create'} >
+            <Button >Create New Email Template</Button>
           </Link>
         </div>
         <TemplateList /> {/* Pass user email if needed, but handled internally now */}

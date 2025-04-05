@@ -1,4 +1,4 @@
-import { internalMutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 
@@ -21,7 +21,7 @@ export const upsertFromClerk = internalMutation({
     const user = await userByClerkId(ctx, data.id);
     if (user === null) {
       // Initialize credits for new users
-      await ctx.db.insert("users", { ...userAttributes, credits: 3 });
+      await ctx.db.insert("users", { ...userAttributes, credits: 1 });
     } else {
       // Only patch attributes, don't overwrite credits unless intended
       await ctx.db.patch(user._id, userAttributes);
