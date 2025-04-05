@@ -131,6 +131,20 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Adjust vertical distance as needed */
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite; /* Adjust duration and timing as needed */
+}
+
 label {
   font-size: 14px;
 }
