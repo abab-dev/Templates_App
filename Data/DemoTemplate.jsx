@@ -1,4 +1,4 @@
-export const Demotemplate =``` [
+export const Demotemplate = [
     {
       "0": {
         "icon": {},
