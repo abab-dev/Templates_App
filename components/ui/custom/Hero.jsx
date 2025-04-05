@@ -14,7 +14,9 @@ function Hero() {
        {/* Increased margin top for buttons */}
       <div className='flex gap-4 mt-8'>
          {/* Subtle button hints - final style depends on button.jsx */}
-        <Button variant={'outline'} size="lg"> Try Demo</Button>
+        <Button variant={'outline'} size="lg" asChild>
+          <Link href="/editor/demo">Try Demo</Link>
+        </Button>
         <Button size="lg">Get Started</Button>
       </div>
        {/* Increased margin top for image, maybe add subtle rounded corners */}

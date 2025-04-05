@@ -11,11 +11,13 @@ import { useEmailTemplate } from "@/app/provider";
 import { Loader2 } from "lucide-react";
 import { useConvex } from "convex/react";
 import { Demotemplate } from "@/Data/DemoTemplate";
+import { useRouter } from "next/navigation";
 
 function Editor() {
   const [viewHTMLCode, setViewHTMLCode] = useState();
   const { templateId } = useParams();
   const { user } = useUser();
+  const router = useRouter();
   const { emailTemplate, setEmailTemplate } = useEmailTemplate();
   const convex = useConvex();
   const [isLoading, setIsLoading] = useState(true); // Initialize to true
@@ -39,13 +41,19 @@ function Editor() {
   };
 
   useEffect(() => {
-    if (user) {
+    if (templateId === "demo") {
+      if (!user) {
+        setEmailTemplate(Demotemplate);
+        setIsLoading(false);
+      } else {
+        router.push("/dashboard"); // Redirect logged-in users away from /editor/demo
+      }
+    } else if (user) {
       getTemplateData();
     } else {
-      setEmailTemplate(Demotemplate);
-      setIsLoading(false); // Ensure loading is set to false when using demo template
+      router.push("/sign-in"); // Redirect to sign-in if not logged in and not demo
     }
-  }, [user]);
+  }, [user, templateId, router]);
 
   if (isLoading) {
     return (
