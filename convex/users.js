@@ -76,7 +76,7 @@ export const hasCredits = query({
   },
 });
 
-export const decrementCredits = internalMutation({
+export const decrementCredits = mutation({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
     const user = await userByClerkId(ctx, args.clerkId);
