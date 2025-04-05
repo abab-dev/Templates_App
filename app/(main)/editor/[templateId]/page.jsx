@@ -19,7 +19,7 @@ function Editor() {
   const { user } = useUser();
   const { emailTemplate, setEmailTemplate } = useEmailTemplate();
   const convex = useConvex();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Initialize to true
 
   const getTemplateData = async () => {
     setIsLoading(true);
@@ -40,12 +40,13 @@ function Editor() {
   };
 
   useEffect(() => {
-    if (user ) {
+    if (user) {
       getTemplateData();
-    }else{
-      setEmailTemplate(JSON.parse(Demotemplate))
+    } else {
+      setEmailTemplate(JSON.parse(Demotemplate));
+      setIsLoading(false); // Ensure loading is set to false when using demo template
     }
-  }, [user ]);
+  }, [user]);
 
   if (isLoading) {
     return (
