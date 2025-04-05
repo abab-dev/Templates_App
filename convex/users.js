@@ -113,6 +113,16 @@ async function userByClerkId(ctx, clerkId) {
     .unique();
 }
 
+// Internal query helper callable from actions
+export const getUserByClerkId = internalQuery({
+  args: { clerkId: v.string() },
+  async handler(ctx, { clerkId }) {
+    // Use the helper function within the query context
+    return await userByClerkId(ctx, clerkId);
+  },
+});
+
+
 export const hasCredits = query({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
