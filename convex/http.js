@@ -1,3 +1,4 @@
+// http.js
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
@@ -13,28 +14,24 @@ http.route({
     try {
       event = await validateRequest(request);
     } catch (err) {
-      // Handle the specific error for missing secret
       if (err instanceof Error && err.message.includes("Webhook secret not configured")) {
         return new Response("Internal Server Error: Webhook secret not configured", { status: 500 });
       }
-      // Handle other potential errors during validation setup if necessary
       console.error("Unexpected error during webhook validation setup:", err);
       return new Response("Internal Server Error", { status: 500 });
     }
 
     if (!event) {
-      // This now specifically means signature verification failed
       return new Response("Webhook validation failed", { status: 400 });
     }
 
-    // Ensure event has a 'type' property before switching
     if (typeof event !== 'object' || event === null || !('type' in event)) {
       console.error("Received invalid event structure from webhook verification");
       return new Response("Invalid event structure", { status: 400 });
     }
 
     switch (event.type) {
-      case "user.created": // intentional fallthrough
+      case "user.created":
       case "user.updated":
         await ctx.runMutation(internal.users.upsertFromClerk, {
           data: event.data,
@@ -50,14 +47,36 @@ http.route({
         await ctx.runMutation(internal.users.deleteFromClerk, { clerkUserId });
         break;
       }
+
       case "session.created": {
-        await ctx.runMutation(internal.users.upsertFromClerk, {
-          data: event.data,
+        const userId = event.data.user_id;
+        if (!userId) {
+          console.error("Missing user_id in session.created event");
+          return new Response("Missing user_id", { status: 400 });
+        }
+
+        const baseUrl = process.env.PUBLIC_VERCEL_BASE_URL || "http://localhost:3000";
+        const userRes = await fetch(`${baseUrl}/api/clerk-user-fetch`, {
+          method: "POST",
+          body: JSON.stringify({ userId }),
+          headers: { "Content-Type": "application/json" },
         });
 
 
+        if (!userRes.ok) {
+          console.error("Failed to fetch user from Clerk API", await userRes.text());
+          return new Response("Failed to fetch user data", { status: 502 });
+        }
+
+        const userData = await userRes.json();
+
+        await ctx.runMutation(internal.users.upsertFromClerk, {
+          data: userData,
+        });
+
         break;
       }
+
       default:
         console.log("Ignored Clerk webhook event:", event.type);
     }
@@ -76,22 +95,17 @@ async function validateRequest(req) {
   const secret = process.env.CLERK_WEBHOOK_SECRET;
   if (!secret) {
     console.error("CLERK_WEBHOOK_SECRET environment variable not set.");
-    // Throw an error to be caught by the main handler for a 500 response
     throw new Error("Webhook secret not configured on the server.");
   }
   const wh = new Webhook(secret);
   try {
-    // Ensure the object returned by verify is correctly typed or handled
     const event = wh.verify(payloadString, svixHeaders);
-    // Assuming verify returns the event object on success
-    // and throws on failure based on svix library behavior.
-    return event; // Return the verified event object directly
+    return event;
   } catch (error) {
-    // Log the specific verification error
     console.error("Error verifying webhook signature:", error);
-    // Indicate validation failure, leading to a 400 response
     return null;
   }
 }
 
 export default http;
+

@@ -1,10 +1,6 @@
-import { internalMutation, mutation, query, internalAction } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { internal } from "./_generated/api";
-import { Webhook } from "svix"; // Keep if needed elsewhere, but not directly for Clerk SDK
 
-// Initialize Clerk client. Ensure CLERK_SECRET_KEY is set in Convex environment variables.
-const clerk = Clerk({ secretKey: process.env.CLERK_SECRET_KEY });
 
 
 export const upsertFromClerk = internalMutation({
@@ -55,20 +51,6 @@ export const deleteFromClerk = internalMutation({
   },
 });
 
-export async function getCurrentUserOrThrow(ctx) {
-  const userRecord = await getCurrentUser(ctx);
-  if (!userRecord) throw new Error("Can't get current user");
-  return userRecord;
-}
-
-export async function getCurrentUser(ctx) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (identity === null) {
-    return null;
-  }
-  // Clerk's user ID is in the 'subject' field of the identity
-  return await userByClerkId(ctx, identity.subject);
-}
 
 // Renamed function and updated index/field names
 async function userByClerkId(ctx, clerkId) {
@@ -79,7 +61,7 @@ async function userByClerkId(ctx, clerkId) {
 }
 
 // Internal query helper callable from actions
-export const getUserByClerkId = internalQuery({
+export const getUserByClerkId = query({
   args: { clerkId: v.string() },
   async handler(ctx, { clerkId }) {
     // Use the helper function within the query context
