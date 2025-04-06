@@ -23,7 +23,7 @@ export default function AIInputBox() {
   const convex = useConvex()
   const hasUserCredits = convex.query(api.users.hasCredits, { clerkId: user?.id || "empty" });
 
-  const decrementUserCredits = useMutation(api.users.decrementCredits );
+  const decrementUserCredits = useMutation(api.users.decrementCredits);
 
   const onGenerate = async () => {
     if (!hasUserCredits) {
@@ -35,12 +35,13 @@ export default function AIInputBox() {
 
     setIsLoading(true);
     try {
-      const result = await axios.post("/api/ai-email-generate", {
+      const baseUrl = process.env.NEXT_PUBLIC_URL;
+
+      const result = await axios.post(`${baseUrl}/api/ai-email-generate`, {
         prompt: PROMPT,
         userEmail: "",
         tId: 0,
       });
-
       await saveTemplate({
         tId: tId,
         design: result.data.data,
