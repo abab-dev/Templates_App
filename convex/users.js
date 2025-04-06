@@ -22,7 +22,7 @@ export const upsertFromClerk = internalMutation({
     const user = await userByClerkId(ctx, data.id);
     if (user === null) {
       // User is new, insert them with initial credits
-      console.log(`Creating new user: ${userAttributes.email}`);
+      // console.log(`Creating new user: ${userAttributes.email}`);
       await ctx.db.insert("users", { ...userAttributes, credits: 1 });
     } else {
       // User already exists, update their attributes (idempotent)
